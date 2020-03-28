@@ -1,0 +1,12 @@
+// Lasher Light Tank
+Name:YURIANTIVEHICLEVEHICLETECH1
+    "Lasher Light Tank"
+END
+
+Desc:YuriAntiVehicleVehicleTech1
+    "A conventional tank equipped with a light cannon, fairly effecive against vehicles and buildings."
+END
+
+Type:YuriAntiVehicleVehicleTech1
+    "Anti-Armor Tank"
+END
