@@ -4,5 +4,6 @@
         <Include type="all" source="Others.xml" />
         <Include type="all" source="LogicCommand.xml" />
         <Include type="all" source="LogicCommandSet.xml" />
+        <Include type="all" source="WeaponTemplate.xml" />
     </Includes>
 </AssetDeclaration>

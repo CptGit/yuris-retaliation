@@ -289,7 +289,7 @@
                     ID="1">
                     <Weapon
                         Ordering="PRIMARY_WEAPON"
-                        Template="AlliedAntiVehicleVehicleTech1Cannon"
+                        Template="YuriAntiVehicleVehicleTech1Cannon"
                         ForbiddenObjectStatus="GENERIC_TOGGLE_STATE"/>
           <Weapon
                         Ordering="SECONDARY_WEAPON"
