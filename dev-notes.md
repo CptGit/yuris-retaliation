@@ -1,5 +1,13 @@
 Mod name cannot exceed 15 characters.
 
-Some candidates for implementing Yuri's  mind control.
-SpecialPower_ActivateYurikoLureRank1
-SpecialPower_ManipulateObject
+### Mind Control
+Yuri's mind control ability.
+
+SpecialPower_ActivateYurikoLureRank1, Yuriko campagin, EP1
+
+SpecialPower_ManipulateObject, Mastermind, C&C3
+
+### Psychic Gas
+Chaos Drone's ability, which causes enemies to behave violently, even against their own forces. 
+
+Redeemer, KW
