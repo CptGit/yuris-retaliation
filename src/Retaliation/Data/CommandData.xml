@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <AssetDeclaration xmlns="uri:ea.com:eala:asset">
+
+    <!-- LogicCommandSet -->
+
     <LogicCommandSet
         id="SovietWarFactoryCommandSet">
         <Cmd>Command_ConstructYuriAntiVehicleVehicleTech1</Cmd>
@@ -16,4 +19,60 @@
             <Cmd>Command_UpgradeSovietWarFactorySalvageYard</Cmd>
     -->     
     </LogicCommandSet>
+
+    <!-- DamageFX -->
+
+    <!-- +++++++++++++++++++++ -->
+
+    <DamageFX id="VehicleDamageFX">
+        <FXGroup Type="NOD_HALLUCINE"
+                 Amount="10.0"
+                 MajorFX="FX_None"
+                 MinorFX="FX_None" />
+    </DamageFX>
+
+    <!-- +++++++++++++++++++++ -->
+
+    <DamageFX id="SubmarineDamageFX">
+        <FXGroup Type="NOD_HALLUCINE"
+                 Amount="10.0"
+                 MajorFX="FX_None"
+                 MinorFX="FX_None" />
+    </DamageFX>
+
+    <!-- +++++++++++++++++++++ -->
+
+    <DamageFX id="InfantryDamageFX">
+        <FXGroup Type="NOD_HALLUCINE"
+                 Amount="10.0"
+                 MajorFX="FX_None"
+                 MinorFX="FX_None" />
+    </DamageFX>
+
+    <!-- +++++++++++++++++++++ -->
+
+    <DamageFX id="FactionStructureDamageFX">
+        <FXGroup Type="NOD_HALLUCINE"
+                 Amount="10.0"
+                 MajorFX="FX_None"
+                 MinorFX="FX_None" />
+    </DamageFX>
+
+    <!-- +++++++++++++++++++++ -->
+
+    <DamageFX id="GenericStructureDamageFX">
+        <FXGroup Type="NOD_HALLUCINE"
+                 Amount="10.0"
+                 MajorFX="FX_None"
+                 MinorFX="FX_None" />
+    </DamageFX>
+
+    <!-- +++++++++++++++++++++ -->
+
+    <DamageFX id="AircraftDamageFX">
+        <FXGroup Type="NOD_HALLUCINE"
+                 Amount="10.0"
+                 MajorFX="FX_None"
+                 MinorFX="FX_None" />
+    </DamageFX>
 </AssetDeclaration>

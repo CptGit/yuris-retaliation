@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AssetDeclaration xmlns="uri:ea.com:eala:asset">
+    <AttributeModifier
+        id="AttributeModifier_Hallucinate"
+        Category="NONE"
+        Duration="6s"
+        ModelConditionsSet="EMOTION_DISSIDENT" >
+    </AttributeModifier>
+</AssetDeclaration>

@@ -10,4 +10,4 @@ SpecialPower_ManipulateObject, Mastermind, C&C3
 ### Psychic Gas
 Chaos Drone's ability, which causes enemies to behave violently, even against their own forces. 
 
-Redeemer, KW
+Redeemer(MODMetaUnit), KW

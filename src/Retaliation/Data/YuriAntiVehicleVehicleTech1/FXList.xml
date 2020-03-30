@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AssetDeclaration xmlns="uri:ea.com:eala:asset">
+    <FXList id="FX_NODRedeemerRageGenerator">
+        <NuggetList>
+            <ParticleSystem
+                Particle="RedeemerRageBurst"
+                OrientToObject="true">
+            </ParticleSystem>
+            <ParticleSystem
+                Particle="RedeemerRageBurstGlow"
+                OrientToObject="true">
+            </ParticleSystem>
+            <ParticleSystem
+                Particle="RedeemerRageDistort"
+                OrientToObject="true">
+            </ParticleSystem>
+            <ParticleSystem
+                Particle="RedeemerRageEngulf"
+                OrientToObject="true">
+                <Offset x="0.0" y="0.0" z="-35.0" />
+            </ParticleSystem>
+            <ParticleSystem
+                Particle="RedeemerRageEngulfDistort"
+                OrientToObject="true">
+                <Offset x="0.0" y="0.0" z="-35.0" />
+            </ParticleSystem>
+            <ParticleSystem
+                Particle="RedeemerRageEngulfSpark"
+                OrientToObject="true">
+                <Offset x="0.0" y="0.0" z="-35.0" />
+            </ParticleSystem>
+            <ParticleSystem
+                Particle="RedeemerRageExplosion"
+                OrientToObject="true">
+            </ParticleSystem>
+            <ParticleSystem
+                Particle="RedeemerRageFlashes"
+                OrientToObject="true">
+            </ParticleSystem>
+            <ParticleSystem
+                Particle="RedeemerRageLightningRing"
+                OrientToObject="true">
+            </ParticleSystem>
+            <ParticleSystem
+                Particle="RedeemerRageRadial"
+                OrientToObject="true">
+            </ParticleSystem>
+            <ParticleSystem
+                Particle="RedeemerRageRadialSpark"
+                OrientToObject="true">
+            </ParticleSystem>
+            <ParticleSystem
+                Particle="RedeemerRageShockwave"
+                OrientToObject="true">
+            </ParticleSystem>
+            <ParticleSystem
+                Particle="RedeemerRageSpark"
+                OrientToObject="true">
+            </ParticleSystem>
+        </NuggetList>
+    </FXList>
+</AssetDeclaration

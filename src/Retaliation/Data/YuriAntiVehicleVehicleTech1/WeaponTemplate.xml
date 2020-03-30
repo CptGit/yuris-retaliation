@@ -50,7 +50,7 @@
         Flags="NOT_ATTRACTED_BY_MAGNETS">
         <Nuggets> <!-- Original damage is 60.0 -->
             <DamageNugget
-                Damage="6.0"
+                Damage="600.0"
                 DamageType="CANNON"
                 DamageFXType="ALLIED_CANNON"
                 DeathType="EXPLODED" />
@@ -91,30 +91,74 @@
                 <Color R="2" G="0" B="0"/>
             </TintObjectsNugget>
 
-            <!-- Normal Attribute Modifier -->
+            <!-- Rage generator -->
+            <DamageNugget
+                Damage="0"
+                Radius="500.0"
+                DelayTimeSeconds="0.0s"
+                DamageType="GRENADE"
+                DamageFXType="NOD_HALLUCINE"
+                DeathType="EXPLODED" >
+            </DamageNugget>
             <AttributeModifierNugget
+                PartitionFilterTestType="SPHERE"
+                AttributeModifierName="AttributeModifier_Hallucinate"
+                Radius="500" >
+                <SpecialObjectFilter
+                    Rule="ANY"
+                    Include="INFANTRY VEHICLE"
+                    Exclude="AIRCRAFT" />
+            </AttributeModifierNugget>
+
+            <!-- Normal Attribute Modifier -->
+<!--             <AttributeModifierNugget
                 DamageFXType="ALLIED_PAINTER"
                 AttributeModifierName="AttributeMod_TargetPainted">
                 <ForbiddenUpgrade>Upgrade_AlliedHighTechnology</ForbiddenUpgrade>
-            </AttributeModifierNugget>
+            </AttributeModifierNugget> -->
 
             <!-- Normal Weapon -->
-            <SpecialPowerNugget
+<!--             <SpecialPowerNugget
                 SpecialPowerTemplate="SpecialPower_PaintTargetTrigger">
                 <ForbiddenUpgrade>Upgrade_AlliedHighTechnology</ForbiddenUpgrade>
-            </SpecialPowerNugget>
+            </SpecialPowerNugget> -->
 
             <!-- High Technology Attribute Modifier -->
-            <AttributeModifierNugget
+<!--             <AttributeModifierNugget
                 DamageFXType="ALLIED_PAINTER"
                 AttributeModifierName="AttributeMod_TargetPainted_HighTechnology">
                 <RequiredUpgrade>Upgrade_AlliedHighTechnology</RequiredUpgrade>
-            </AttributeModifierNugget>
+            </AttributeModifierNugget> -->
             <!-- High Technology Special power weapon -->
-            <SpecialPowerNugget
+<!--             <SpecialPowerNugget
                 SpecialPowerTemplate="SpecialPower_PaintTargetTrigger_HighTechnology">
                 <RequiredUpgrade>Upgrade_AlliedHighTechnology</RequiredUpgrade>
-            </SpecialPowerNugget>
+            </SpecialPowerNugget> -->
+        </Nuggets>
+    </WeaponTemplate>
+
+    <WeaponTemplate
+        id="NODWarmechRageGenerator"
+        RadiusDamageAffects="ENEMIES NEUTRALS"
+        FireFX="FX_AlliedTankGun">
+        <Nuggets>
+            <DamageNugget
+                Damage="0"
+                Radius="500.0"
+                DelayTimeSeconds="0.0s"
+                DamageType="GRENADE"
+                DamageFXType="NOD_HALLUCINE"
+                DeathType="EXPLODED" >
+            </DamageNugget>
+            <AttributeModifierNugget
+                PartitionFilterTestType="SPHERE"
+                AttributeModifierName="AttributeModifier_Hallucinate"
+                Radius="500" >
+                <SpecialObjectFilter
+                    Rule="ANY"
+                    Include="INFANTRY VEHICLE"
+                    Exclude="AIRCRAFT" />
+            </AttributeModifierNugget>
         </Nuggets>
     </WeaponTemplate>
 </AssetDeclaration>
