@@ -12,5 +12,8 @@
 		<!-- 同目录下的文件直接填写文件名即可。-->
 		<Include type="all" source="CommandData.xml" />
 		<Include type="all" source="YuriAntiVehicleVehicleTech1/YuriAntiVehicleVehicleTech1.xml" />
+
+		<!-- Modification to ease our testing. Uncomment them out before release. -->
+		<Include type="all" source="Test/Test.xml" />
       </Includes>
 </AssetDeclaration>
