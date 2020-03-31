@@ -11,3 +11,7 @@ SpecialPower_ManipulateObject, Mastermind, C&C3
 Chaos Drone's ability, which causes enemies to behave violently, even against their own forces. 
 
 Redeemer(MODMetaUnit), KW
+
+ParalyzeType
+
+LUA
