@@ -43,7 +43,7 @@
         SubGroupPriority="425" 
         EditorSorting="UNIT"
         HealthBoxHeightOffset="25"
-        BuildTime="10"
+        BuildTime="1"
         CommandSet="YuriAntiVehicleVehicleTech1CommandSet"
         KindOf="SELECTABLE CAN_ATTACK CAN_CAST_REFLECTIONS SCORE VEHICLE CAN_BE_FAVORITE_UNIT T2_UNIT"
         WeaponCategory="CANNON"
@@ -67,7 +67,7 @@
         <LocomotorSet
             Locomotor="TestReactiveLocomotorTANK"
             Condition="NORMAL"
-            Speed="80.0" />
+            Speed="200.0" />
         <SkirmishAIInformation
             UnitBuilderStandardCombatUnit="true" />
         <Draws>
@@ -293,7 +293,7 @@
                         ForbiddenObjectStatus="GENERIC_TOGGLE_STATE"/>
           <Weapon
                         Ordering="SECONDARY_WEAPON"
-                        Template="NODConfessorGrenade"
+                        Template="YuriAntiVehicleVehicleTech1TargetPainter"
                         ObjectStatus="GENERIC_TOGGLE_STATE"/>
                     <TurretSettings
                         TurretTurnRate="360"
@@ -430,6 +430,10 @@
                 StatusToSet="WEAPON_UPGRADED_02">
                 <TriggeredBy>Upgrade_Veterancy_HEROIC</TriggeredBy>
             </StatusBitsUpgrade>
+
+            <LUAEventList
+                id="ModuleTag_LUAEventList"
+                EventListName="ExampleEvent"	/>
         </Behaviors>
         <AI>
             <AIUpdate

@@ -11,7 +11,20 @@ SpecialPower_ManipulateObject, Mastermind, C&C3
 Chaos Drone's ability, which causes enemies to behave violently, even against their own forces. 
 
 Redeemer(MODMetaUnit), KW
+> EMOTION_DISSIDENT is defected in nature
 
 ParalyzeType
+> pasue but not cancel the unit's original operation. No use.
 
 LUA
+> trying
+
+### Issues
+
+The first line works but the commented line does not. Either of them is supposed to work.
+```lua
+function ExampleFunction(self)
+    ExecuteAction("NAMED_USE_COMMANDBUTTON_ABILITY", self, "Command_ToggleTargetPainter")
+    -- ObjectDoSpecialPower(self, "SpecialPower_ToggleTargetPainter")
+end
+```

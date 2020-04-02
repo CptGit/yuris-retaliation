@@ -67,6 +67,7 @@
         CanFireWhileMoving="true"
         WeaponSpeed="999999.0"
         AcceptableAimDelta="20d"
+        ReAcquireDetailType="PER_CLIP"
         Flags="ATTACK_NEEDS_LINE_OF_SIGHT NOT_ATTRACTED_BY_MAGNETS"
         RequiredAntiMask="ANTI_VEHICLE ANTI_INFANTRY"
         ForbiddenAntiMask="ANTI_STRUCTURE ANTI_SUBMERGED ANTI_AIRBORNE_VEHICLE ANTI_AIRBORNE_INFANTRY">
@@ -97,10 +98,17 @@
                       PostColorTime="0s"
                       Frequency="1"
                       Amplitude="0">
-                <Color R="2" G="0" B="0"/>
+                <Color R="2" G="0" B="0" />
             </TintObjectsNugget>
 
-            <ParalyzeNugget
+            <LuaEventNugget 
+                      EventName="ExampleKillMe" 
+                      Radius="200"
+                      SendToEnemies="true"
+                      SendToAllies="true"
+                      SendToNeutral="true" />
+
+            <!-- <ParalyzeNugget
                 DurationSeconds="3s"
                 ParalyzeType="EMP" >
                 <SpecialObjectFilter
@@ -113,7 +121,7 @@
                     <ExcludeThing>JapanBalloonBomb</ExcludeThing>
                     <ExcludeThing>AlliedSupersonicBomber</ExcludeThing>
                 </SpecialObjectFilter>
-            </ParalyzeNugget>
+            </ParalyzeNugget> -->
 
             <!-- Normal Attribute Modifier -->
 <!--             <AttributeModifierNugget
