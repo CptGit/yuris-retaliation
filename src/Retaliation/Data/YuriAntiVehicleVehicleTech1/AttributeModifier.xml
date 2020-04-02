@@ -3,7 +3,7 @@
     <AttributeModifier
         id="AttributeModifier_Hallucinate"
         Category="NONE"
-        Duration="6s"
+        Duration="20s"
         ModelConditionsSet="EMOTION_DISSIDENT" >
     </AttributeModifier>
 </AssetDeclaration>

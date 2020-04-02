@@ -293,7 +293,7 @@
                         ForbiddenObjectStatus="GENERIC_TOGGLE_STATE"/>
           <Weapon
                         Ordering="SECONDARY_WEAPON"
-                        Template="YuriAntiVehicleVehicleTech1TargetPainter"
+                        Template="NODConfessorGrenade"
                         ObjectStatus="GENERIC_TOGGLE_STATE"/>
                     <TurretSettings
                         TurretTurnRate="360"

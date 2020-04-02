@@ -8,7 +8,7 @@
             source="DATA:BaseObjects/BaseSovietStructure.xml" />
     </Includes>
     <Defines>
-        <Define name="SOVIET_WARFACTORY_LOCAL_UNPACK_TIME" value="20s" />
+        <Define name="SOVIET_WARFACTORY_LOCAL_UNPACK_TIME" value="1s" />
     </Defines>
     <GameObject
         id="SovietWarFactory"

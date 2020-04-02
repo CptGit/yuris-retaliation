@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <AssetDeclaration xmlns="uri:ea.com:eala:asset">
     <Includes>
-        <!-- Remove any building dependency so that we can build it at the very beginning of the game. -->
+        <!-- Remove any building dependency and reduce building time. -->
         <Include type="all" source="SovietWarFactory/SovietWarFactory.xml" />
     </Includes>
 </AssetDeclaration>
