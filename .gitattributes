@@ -1,0 +1,11 @@
+## Game files
+*.xml text eol=crlf
+*.str text eol=crlf
+*.lua text eol=crlf
+
+## Docs
+*.md text eol=lf
+
+## Scripts
+*.sh text eol=lf
+*.bat text eol=crlf
