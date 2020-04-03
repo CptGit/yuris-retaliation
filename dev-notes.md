@@ -1,4 +1,4 @@
-Mod name cannot exceed 15 characters.
+## Requirements
 
 ### Mind Control
 Yuri's mind control ability.
@@ -14,12 +14,13 @@ Redeemer(MODMetaUnit), KW
 > EMOTION_DISSIDENT is defected in nature
 
 ParalyzeType
-> pasue but not cancel the unit's original operation. No use.
+> Pause but not cancel the unit's original operation. No use.
 
 LUA
-> trying
+> In progress
 
-### Issues
+
+## Issues
 
 The first line works but the commented line does not. Either of them is supposed to work.
 ```lua
@@ -30,3 +31,25 @@ end
 ```
 
 idk why but OnDamaged seems not working at all.
+
+
+## Docs
+
+### LUA
+
+`LuaEventNugget`: This nugget triggers the specified event at the
+object that gets hit by the nugget ("radius" is effective, which means
+triggering an event at all the objects within a range). Then if an
+object registers an <EvenList> that handles the event, then it will
+react.
+
+`ScriptedEvent` are of two kinds and parameter format are fixed. See
+comments in `ScriptEvents.xml`.
+
+### XML
+`xai:joinAction="Replace/Append/Remove/Overwrite"`: to be different
+from parent when inheriting.
+
+#### Misc
+Mod name cannot exceed 15 characters, which is one of SDK's
+limitations.
