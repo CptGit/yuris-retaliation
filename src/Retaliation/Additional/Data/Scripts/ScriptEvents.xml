@@ -71,6 +71,8 @@
             <Conditions>+SPECIAL_POWER_3 -UNPACKING -PACKING</Conditions>
         </ModelConditionEvent>
 
+        <!-- Additional -->
+        <ScriptedEvent Name="Dummy" />
     </Events>
 <!-- RA3 EVENTS - CnC3 BELOW -->
 
@@ -261,9 +263,10 @@
     </EventList>
 
     <!-- Additional -->
+
     <EventList Name="ExampleEvent" Inherit="BaseScriptFunctions">
         <EventHandler
-            EventName="OnCreated"
+            EventName="Dummy"
             ScriptFunctionName="ExampleFunction"
             DebugSingleStep="false" />
     </EventList>

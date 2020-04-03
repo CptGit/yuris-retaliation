@@ -28,3 +28,5 @@ function ExampleFunction(self)
     -- ObjectDoSpecialPower(self, "SpecialPower_ToggleTargetPainter")
 end
 ```
+
+idk why but OnDamaged seems not working at all.

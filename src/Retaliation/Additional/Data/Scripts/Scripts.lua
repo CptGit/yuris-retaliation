@@ -442,6 +442,8 @@ end
 -- Additional
 
 function ExampleFunction(self)
-    ExecuteAction("NAMED_USE_COMMANDBUTTON_ABILITY", self, "Command_ToggleTargetPainter")
+    -- ExecuteAction("NAMED_USE_COMMANDBUTTON_ABILITY", self, "Command_ToggleTargetPainter")
     -- ObjectDoSpecialPower(self, "SpecialPower_ToggleTargetPainter")
+    -- ObjectSetObjectStatus(self, "DESTROYED")
+    kill(self)
 end

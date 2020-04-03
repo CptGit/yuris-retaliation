@@ -433,7 +433,7 @@
 
             <LUAEventList
                 id="ModuleTag_LUAEventList"
-                EventListName="ExampleEvent"	/>
+                EventListName="ExampleEvent" />
         </Behaviors>
         <AI>
             <AIUpdate
