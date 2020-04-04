@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <AssetDeclaration xmlns="uri:ea.com:eala:asset">
     <LogicCommandSet
-        id="YuriAntiVehicleVehicleTech1CommandSet">
+        id="ChaosDroneCommandSet">
         <Cmd>Command_ToggleTargetPainter</Cmd>
         <Cmd>Command_AttackMove</Cmd>
         <Cmd>Command_MoveToPositionAndCollect</Cmd>

@@ -35,7 +35,7 @@
     </Includes>
     <!-- AKA Guardian Tank aka The Chieftain -->
     <GameObject
-        id="YuriAntiVehicleVehicleTech1"
+        id="ChaosDrone"
         inheritFrom="BaseVehicle"
         SelectPortrait="Portrait_AlliedAntiVehicleVehicleTech1"
         ButtonImage="Button_AlliedAntiVehicleVehicleTech1_on"
@@ -44,16 +44,16 @@
         EditorSorting="UNIT"
         HealthBoxHeightOffset="25"
         BuildTime="1"
-        CommandSet="YuriAntiVehicleVehicleTech1CommandSet"
+        CommandSet="ChaosDroneCommandSet"
         KindOf="SELECTABLE CAN_ATTACK CAN_CAST_REFLECTIONS SCORE VEHICLE CAN_BE_FAVORITE_UNIT T2_UNIT"
         WeaponCategory="CANNON"
         VoicePriority="188"
-        EditorName="YuriAntiVehicleVehicleTech1"
-        Description="Desc:YuriAntiVehicleVehicleTech1"
-        TypeDescription="Type:YuriAntiVehicleVehicleTech1"
+        EditorName="ChaosDrone"
+        Description="Desc:ChaosDrone"
+        TypeDescription="Type:ChaosDrone"
         UnitIntro="Allied_GuardianTank_UnitIntro">
         <DisplayName
-            xai:joinAction="Replace" xmlns:xai="uri:ea.com:eala:asset:instance">Name:YuriAntiVehicleVehicleTech1</DisplayName>
+            xai:joinAction="Replace" xmlns:xai="uri:ea.com:eala:asset:instance">Name:ChaosDrone</DisplayName>
         <ObjectResourceInfo>
             <BuildCost Account="=$ACCOUNT_ORE" Amount="950"/>
         </ObjectResourceInfo>
@@ -289,11 +289,11 @@
                     ID="1">
                     <Weapon
                         Ordering="PRIMARY_WEAPON"
-                        Template="YuriAntiVehicleVehicleTech1Cannon"
+                        Template="ChaosDroneCannon"
                         ForbiddenObjectStatus="GENERIC_TOGGLE_STATE"/>
           <Weapon
                         Ordering="SECONDARY_WEAPON"
-                        Template="YuriAntiVehicleVehicleTech1TargetPainter"
+                        Template="ChaosDroneTargetPainter"
                         ObjectStatus="GENERIC_TOGGLE_STATE"/>
                     <TurretSettings
                         TurretTurnRate="360"

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <AssetDeclaration xmlns="uri:ea.com:eala:asset" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <WeaponTemplate
-        id="YuriAntiVehicleVehicleTech1Cannon"
+        id="ChaosDroneCannon"
         AttackRange="150.0"
         WeaponSpeed="1000"
         MinWeaponSpeed="5000"
@@ -24,7 +24,7 @@
             MaxSeconds="1.8s" />
         <Nuggets>
             <ProjectileNugget
-                WarheadTemplate="YuriAntiVehicleVehicleTech1Warhead"
+                WarheadTemplate="ChaosDroneWarhead"
                 ProjectileTemplate="AlliedAntiVehicleVehicleTech1Projectile">
                 <VeterancyProjectiles
                     VeterancyLevel="HEROIC"
@@ -44,7 +44,7 @@
     </WeaponTemplate>
 
     <WeaponTemplate
-        id="YuriAntiVehicleVehicleTech1Warhead"
+        id="ChaosDroneWarhead"
         RadiusDamageAffects="ALLIES ENEMIES NEUTRALS"
         RequiredAntiMask="ANTI_GROUND ANTI_STRUCTURE ANTI_WATER"
         Flags="NOT_ATTRACTED_BY_MAGNETS">
@@ -62,7 +62,7 @@
     </WeaponTemplate>
 
     <WeaponTemplate
-        id="YuriAntiVehicleVehicleTech1TargetPainter"
+        id="ChaosDroneTargetPainter"
         AttackRange="300.0"
         CanFireWhileMoving="true"
         WeaponSpeed="999999.0"

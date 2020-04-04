@@ -5,7 +5,7 @@
 
     <LogicCommandSet
         id="SovietWarFactoryCommandSet">
-        <Cmd>Command_ConstructYuriAntiVehicleVehicleTech1</Cmd>
+        <Cmd>Command_ConstructChaosDrone</Cmd>
         <Cmd>Command_ConstructSovietSurveyor</Cmd>
         <Cmd>Command_ConstructSovietScoutVehicle</Cmd>
         <Cmd>Command_ConstructSovietAntiInfantryVehicle</Cmd>

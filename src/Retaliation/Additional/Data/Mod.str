@@ -1,12 +1,25 @@
 // Lasher Light Tank
-Name:YURIANTIVEHICLEVEHICLETECH1
-    "Lasher Light Tank"
+Name:LasherTank
+    "Lasher Tank"
 END
 
-Desc:YuriAntiVehicleVehicleTech1
-    "A conventional tank equipped with a light cannon, fairly effecive against vehicles and buildings."
+Desc:LasherTank
+    "Conventional tanks equipped with a light cannon, fairly effecive against vehicles and buildings."
 END
 
-Type:YuriAntiVehicleVehicleTech1
+Type:LasherTank
     "Anti-Armor Tank"
+END
+
+// Chaos Drone
+Name:ChaosDrone
+    "Chaos Drone"
+END
+
+Desc:ChaosDrone
+    "Small-size and fast-moving drones. They release hallucinatory gas that quickly throw well-ordered enemy forces in disarray."
+END
+
+Type:ChaosDrone
+    "Special Weapon Support"
 END

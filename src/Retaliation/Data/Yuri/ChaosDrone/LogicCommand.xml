@@ -2,7 +2,7 @@
 <AssetDeclaration xmlns="uri:ea.com:eala:asset">
     <LogicCommand
         Type="UNIT_BUILD"
-        id="Command_ConstructYuriAntiVehicleVehicleTech1">
-        <Object>YuriAntiVehicleVehicleTech1</Object>
+        id="Command_ConstructChaosDrone">
+        <Object>ChaosDrone</Object>
     </LogicCommand>
 </AssetDeclaration>
