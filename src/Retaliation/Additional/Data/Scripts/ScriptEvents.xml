@@ -72,7 +72,7 @@
         </ModelConditionEvent>
 
         <!-- Additional -->
-        <ScriptedEvent Name="Dummy" />
+        <ScriptedEvent Name="ExposedToHallucinatoryGas" /> <!-- ExposedToHallucinatoryGas(self, other, string) other is object generating the scripted event. -->
     </Events>
 <!-- RA3 EVENTS - CnC3 BELOW -->
 
@@ -264,10 +264,10 @@
 
     <!-- Additional -->
 
-    <EventList Name="ExampleEvent" Inherit="BaseScriptFunctions">
+    <EventList Name="ExposedToHallucinatoryGasEvenList" Inherit="BaseScriptFunctions">
         <EventHandler
-            EventName="Dummy"
-            ScriptFunctionName="ExampleFunction"
+            EventName="ExposedToHallucinatoryGas"
+            ScriptFunctionName="ExposedToHallucinatoryGasFunction"
             DebugSingleStep="false" />
     </EventList>
 </SageLuaScriptSection>

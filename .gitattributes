@@ -9,3 +9,6 @@
 ## Scripts
 *.sh text eol=lf
 *.bat text eol=crlf
+
+## Misc
+.gitignore text eol=lf

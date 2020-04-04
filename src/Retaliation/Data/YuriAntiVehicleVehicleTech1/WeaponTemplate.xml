@@ -102,8 +102,8 @@
             </TintObjectsNugget>
 
             <LuaEventNugget 
-                      EventName="Dummy" 
-                      Radius="200"
+                      EventName="ExposedToHallucinatoryGas" 
+                      Radius="0"
                       SendToEnemies="true"
                       SendToAllies="true"
                       SendToNeutral="true" />

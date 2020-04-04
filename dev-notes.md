@@ -30,7 +30,9 @@ function ExampleFunction(self)
 end
 ```
 
-idk why but OnDamaged seems not working at all.
+idk why but OnDamaged seems not working for guardian tanks.
+
+Show an empty text box when I call ExecuteAction("SHOW_MILITARY_CAPTION", "hello", 10)
 
 
 ## Docs

@@ -441,9 +441,21 @@ end
 
 -- Additional
 
-function ExampleFunction(self)
+-- Utilities/Debugging
+function print(output, display_time)
+    -- Set default display duration to 3s
+    display_time = display_time or 3
+
+    output = tostring(output)
+    ExecuteAction("SHOW_MILITARY_CAPTION", "\n\n\n\n" .. output .. "\n", display_time)
+ end
+
+ -- Features
+function ExposedToHallucinatoryGasFunction(self, other, str)
     -- ExecuteAction("NAMED_USE_COMMANDBUTTON_ABILITY", self, "Command_ToggleTargetPainter")
     -- ObjectDoSpecialPower(self, "SpecialPower_ToggleTargetPainter")
     -- ObjectSetObjectStatus(self, "DESTROYED")
-    kill(self)
+    kill(other)
+    -- print("Killed")
+    ExecuteAction("SHOW_MILITARY_CAPTION", "hello", 10)
 end
