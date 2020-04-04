@@ -439,23 +439,46 @@ function OnJapanLightTransportVehicleGenericEvent(self, eventType, data)
     end
 end
 
--- Additional
+--------------------------------------------------------------------------------
+------------------------------------ CUSTOM ------------------------------------
+--------------------------------------------------------------------------------
 
--- Utilities/Debugging
-function print(output, display_time)
+----------------------------------- Configs ------------------------------------
+
+LIVE_OUTPUT_FILE = "D:/Games/yuris-retaliation/scripts/LIVE_OUTPUT.txt"
+
+---------------------------------- Utilities -----------------------------------
+
+-- Print ingame
+-- TODO: not working for all. Just show an empty text box without any text.
+function PrintInGame(output, display_time)
     -- Set default display duration to 3s
     display_time = display_time or 3
 
-    output = tostring(output)
-    ExecuteAction("SHOW_MILITARY_CAPTION", "\n\n\n\n" .. output .. "\n", display_time)
+    -- Print ingame
+    ExecuteAction("SHOW_MILITARY_CAPTION",
+            "\n\n\n\n" .. tostring(output) .. "\n",
+            display_time)
  end
 
- -- Features
+-- Print output to file. Will create the file if it does not exist.
+function PrintToFile(output,file)
+    file = file or LIVE_OUTPUT_FILE
+    output = tostring(output)
+
+    local filehandle = writeto(file)
+    write(filehandle, output)
+    flush(filehandle)
+    closefile(filehandle)
+ end
+
+--------------------------- Ingame event functions -----------------------------
+
 function ExposedToHallucinatoryGasFunction(self, other, str)
     -- ExecuteAction("NAMED_USE_COMMANDBUTTON_ABILITY", self, "Command_ToggleTargetPainter")
     -- ObjectDoSpecialPower(self, "SpecialPower_ToggleTargetPainter")
     -- ObjectSetObjectStatus(self, "DESTROYED")
     kill(other)
-    -- print("Killed")
-    ExecuteAction("SHOW_MILITARY_CAPTION", "hello", 10)
+    -- PrintInGame("Killed")
+    PrintToFile("killed")
 end
