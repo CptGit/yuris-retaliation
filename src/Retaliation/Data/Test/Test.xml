@@ -3,5 +3,6 @@
     <Includes>
         <!-- Remove any building dependency and reduce building time. -->
         <Include type="all" source="SovietWarFactory/SovietWarFactory.xml" />
+        <Include type="all" source="DATA:Soviet/Units/SovietAntiInfantryInfantry.xml" />
     </Includes>
 </AssetDeclaration>

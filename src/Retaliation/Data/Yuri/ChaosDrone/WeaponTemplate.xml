@@ -103,7 +103,7 @@
 
             <LuaEventNugget 
                       EventName="ExposedToHallucinatoryGas" 
-                      Radius="0"
+                      Radius="20"
                       SendToEnemies="true"
                       SendToAllies="true"
                       SendToNeutral="true" />
