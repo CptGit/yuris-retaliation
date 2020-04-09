@@ -430,10 +430,6 @@
                 StatusToSet="WEAPON_UPGRADED_02">
                 <TriggeredBy>Upgrade_Veterancy_HEROIC</TriggeredBy>
             </StatusBitsUpgrade>
-
-            <LUAEventList
-                id="ModuleTag_LUAEventList"
-                EventListName="ExposedToHallucinatoryGasEvenList" />
         </Behaviors>
         <AI>
             <AIUpdate

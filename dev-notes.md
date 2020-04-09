@@ -20,6 +20,7 @@ ParalyzeType
 LUA
 > In progress
 
+NON_AUTOACQUIRABLE
 
 ## Issues
 

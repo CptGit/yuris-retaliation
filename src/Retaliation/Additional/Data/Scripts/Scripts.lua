@@ -443,6 +443,14 @@ end
 ------------------------------------ CUSTOM ------------------------------------
 --------------------------------------------------------------------------------
 
+-------------------------------- Global variables ------------------------------
+
+STANCE_TYPE = {
+    ["GUARD"]=0, ["AGGRESSIVE"]=1, ["HOLD_POSITION"]=2, ["HOLD_FIRE"]=3
+}
+
+BOOLEAN = { ["false"]=0, ["true"]=1 }
+
 ----------------------------------- Configs ------------------------------------
 
 LIVE_OUTPUT_FILE = "D:/Games/yuris-retaliation/scripts/LIVE_OUTPUT.txt"
@@ -461,24 +469,53 @@ function PrintInGame(output, display_time)
             display_time)
  end
 
--- Print output to file. Will create the file if it does not exist.
-function PrintToFile(output,file)
+-- Print output to file with the given mode ('a' by default). Will create the
+-- file if it does not exist.
+function PrintToFile(output, mode, file)
+    mode = mode or 'a'
     file = file or LIVE_OUTPUT_FILE
     output = tostring(output)
 
-    local filehandle = writeto(file)
-    write(filehandle, output)
+    local filehandle = openfile(file, mode)
+    if filehandle ~= nil then
+        write(filehandle, output)
+    else
+        local filehandle = writeto(file)
+        write(filehandle, output)
+    end
     flush(filehandle)
     closefile(filehandle)
- end
+end
+
+function PrintlnToFile(output, mode, file)
+    PrintToFile(output .. '\n', mode, file)
+end
 
 --------------------------- Ingame event functions -----------------------------
 
 function ExposedToHallucinatoryGasFunction(self, other, str)
     -- ExecuteAction("NAMED_USE_COMMANDBUTTON_ABILITY", self, "Command_ToggleTargetPainter")
-    -- ObjectDoSpecialPower(self, "SpecialPower_ToggleTargetPainter")
+    -- ObjectDoSpecialPower(self, "SpecialPower_ToggleTargetPainter") not working
     -- ObjectSetObjectStatus(self, "DESTROYED")
-    kill(other)
-    -- PrintInGame("Killed")
-    PrintToFile("killed")
+    -- kill(other)
+    -- PrintInGame("Killed") not working
+
+    ExecuteAction("NAMED_STOP", self)
+    PrintlnToFile("hello " .. date(), 'w')
+    -- ExecuteAction("UNIT_SET_MODELCONDITION_FOR_DURATION", self, "EMOTION_DISSIDENT", 20, 100)
+    ExecuteAction("UNIT_SET_STANCE", self, STANCE_TYPE["AGGRESSIVE"])
+    ExecuteAction("UNIT_SET_MODELCONDITION_FOR_DURATION", self, "EMOTION_DISSIDENT", 20, 100)
+    -- ExecuteAction("UNIT_SET_MODELCONDITION_GENERIC", self, "EMOTION_DISSIDENT", 20)
+    
+    -- TODO(minor): recover the original stance of this unit after the dissident emotion ends
+    -- TODO(urgent): how to build an asymmetric enemy relation, which means the dissident unit can attack its friends but the friends cannot attack it.
+    -- TODO(more urgent): how to make the dissident unit not attack the chaos drone? NON_AUTOACQUIRABLE?
+    PrintlnToFile("world " .. date())
+
+    ----------------------------
+    -- ExecuteAction("UNIT_SET_MODELCONDITION_GENERIC", UNIT, MODEL_CONDITION, DURATION)
+
+    -- ExecuteAction("NAMED_SET_EMOTICON", UNIT, EMOTICON, REAL)
+    -- Unit_/ Set emoticon for duration (-1.0 permanent, otherwise duration in sec).
+    -- EMOTICON	= { ["EMOTION_UNCONTROLLABLY_AFRAID"]=0, ["EMOTION_TAUNTING"]=1, ["EMOTION_QUARRELSOME"]=2, ["EMOTION_POINTING"]=3, ["EMOTION_PANIC"]=4, ["EMOTION_MORALE_LOW"]=5, ["EMOTION_MORALE_HIGH"]=6, ["EMOTION_LOOK_TO_SKY"]=7, ["EMOTION_GUNG_HO"]=8, ["EMOTION_DOOM"]=9, ["EMOTION_DISSIDENT"]=10, ["EMOTION_COWER"]=11, ["EMOTION_CHEER_FOR_ABOUT_TO_CRUSH"]=12, ["EMOTION_CELEBRATING"]=13, ["EMOTION_BRACE_FOR_BEING_CRUSHED"]=14, ["EMOTION_AMUSED"]=15, ["EMOTION_ALERT"]=16, ["EMOTION_AFRAID"]=17 }                                   
 end
