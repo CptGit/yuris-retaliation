@@ -7,6 +7,7 @@ A C&amp;C: Red Alert 3 MOD that rebuilds Yuri's faction from C&amp;C: Yuri's Rev
 This mod aims to bring Yuri and his army back to Red Alert 3 universe. We try our best to follow the original/official settings of Yuri's faction in C&amp;C Yuri's Revenge.
 
 ## Acknowledgements
+- LUATESTv1, by PDZ
 - META MOD 2.0 source, by Mjjstral
 - Upheval & Insurrection source, by Bibber, jkjuuu, 矛式迷你潜艇, suvzi and so on.
 - All tools from the coummnity

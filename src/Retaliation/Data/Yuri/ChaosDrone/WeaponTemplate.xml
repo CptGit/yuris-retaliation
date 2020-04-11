@@ -97,13 +97,14 @@
                       SustainedColorTime="20.0s"
                       PostColorTime="0s"
                       Frequency="1"
-                      Amplitude="0">
+                      Amplitude="0"
+                      ForbiddenTargetModelCondition="EMOTION_DISSIDENT">
                 <Color R="2" G="0" B="0" />
             </TintObjectsNugget>
 
             <LuaEventNugget 
                       EventName="ExposedToHallucinatoryGas" 
-                      Radius="20"
+                      Radius="0.0"
                       SendToEnemies="true"
                       SendToAllies="true"
                       SendToNeutral="true" />

@@ -71,10 +71,34 @@
             <Conditions>+SPECIAL_POWER_3 -UNPACKING -PACKING</Conditions>
         </ModelConditionEvent>
 
-        <!-- Additional -->
+        <!-- CUSTOM -->
+
+        <!-- Triggered by Chaos Drone's weapon -->
         <ScriptedEvent Name="ExposedToHallucinatoryGas" /> <!-- ExposedToHallucinatoryGas(self, other, string) other is object generating the scripted event. -->
+
+        <!-- CUSTOM END -->
     </Events>
-<!-- RA3 EVENTS - CnC3 BELOW -->
+
+    <!-- EVENTLIST -->
+
+    <!-- Parent evenlist has to be put before any child evenlist that inherits
+    the parent. That is why I move BaseScriptFunctions here. -->
+    <EventList Name="BaseScriptFunctions">
+        <!-- If there are any events that need to apply to all units, put them here. jba -->
+    </EventList>
+
+    <!-- CUSTOM -->
+
+    <EventList Name="ExposedToHallucinatoryGasEvenList" Inherit="BaseScriptFunctions">
+        <EventHandler
+            EventName="ExposedToHallucinatoryGas"
+            ScriptFunctionName="ExposedToHallucinatoryGasFunction"
+            DebugSingleStep="false" />
+    </EventList>
+
+    <!-- CUSTOM END -->
+
+    <!-- RA3 EVENTS - CnC3 BELOW -->
 
     <EventList Name="AlliedBaseDefenseFunctions" Inherit="BaseScriptFunctions">
         <EventHandler EventName="OnCreated"	ScriptFunctionName="OnAlliedBaseDefenseCreated" DebugSingleStep="false"/>
@@ -88,7 +112,7 @@
         <EventHandler EventName="OnCreated"	ScriptFunctionName="OnSovietAntiVehicleVehicleTech1Created" DebugSingleStep="false"/>
     </EventList>
 
-    <EventList Name="AlliedAntiVehicleInfantryFunctions" Inherit="BaseScriptFunctions">
+    <EventList Name="AlliedAntiVehicleInfantryFunctions" Inherit="ExposedToHallucinatoryGasEvenList">
         <EventHandler EventName="OnGenericEvent" ScriptFunctionName="OnAlliedAntiVehicleInfantryGenericEvent" DebugSingleStep="false"/>
     </EventList>
 
@@ -101,10 +125,6 @@
     </EventList>
 
     <!-- CnC3 EVENTS -->
-
-    <EventList Name="BaseScriptFunctions">
-        <!-- If there are any events that need to apply to all units, put them here. jba -->
-    </EventList>
 
     <EventList Name="GDIOrcaAirstrikeEventsList" Inherit="GDIAirstrikeOrcaWeapon">
         <EventHandler EventName="OnCreated" ScriptFunctionName="onCreatedGDIOrcaAirstrike" DebugSingleStep="false"/>
@@ -260,14 +280,5 @@
 
     <EventList Name="RubbleDropshipFunctions" Inherit="BaseScriptFunctions">
         <EventHandler EventName="OnCreated"	ScriptFunctionName="OnRubbleDropshipCreated" DebugSingleStep="false"/>
-    </EventList>
-
-    <!-- Additional -->
-
-    <EventList Name="ExposedToHallucinatoryGasEvenList" Inherit="BaseScriptFunctions">
-        <EventHandler
-            EventName="ExposedToHallucinatoryGas"
-            ScriptFunctionName="ExposedToHallucinatoryGasFunction"
-            DebugSingleStep="false" />
     </EventList>
 </SageLuaScriptSection>
