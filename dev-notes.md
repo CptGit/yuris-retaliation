@@ -23,6 +23,16 @@ LUA
 
 NON_AUTOACQUIRABLE
 
+Some ideas for implementing the same firing effect when selecting as
+ the special power firing.
+- Make a dummmy main weapon that remove some ObjectStatus restriction
+  for the special power weapon, such that the special power weapon
+  fires immediately.
+- When firing by selecting, creates an OCL at itself and fires the
+  special power weapon.
+- Write LUA script, where `other`(the chaos drone itself) fires the
+  special power weapon.
+
 ## Issues
 
 The first line works but the commented line does not. I believe they are
@@ -43,8 +53,12 @@ ForbiddenTargetModelCondition does NOT work in LuaEventNugget.
 
 ## Docs
 
-### LUA
+### Weapon
+`FireWeaponUpdate` lets the weapon keep firing at the current position
+of the owner unit. `WeaponFireSpecialAbilityUpdate` does the same
+thing but along with special power triggering firing.
 
+### LUA
 `LuaEventNugget`: This nugget triggers the specified event at the
 object that gets hit by the nugget ("radius" is effective, which means
 triggering an event at all the objects within a range). If the
@@ -61,7 +75,7 @@ Inherited evenlist must be put before inheriting ones in `ScriptEvents.xml`. For
 example, `BaseScriptFunctions` has to be put before any other evenlist if it is
 not empty.
 
-### XML
+### XML base
 `xai:joinAction="Replace/Append/Remove/Overwrite"`: to be different
 from parent when inheriting.
 
