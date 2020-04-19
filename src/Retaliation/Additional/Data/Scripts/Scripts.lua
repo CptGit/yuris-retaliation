@@ -508,8 +508,6 @@ end
 --------------------------- Ingame event functions -----------------------------
 
 function ExposedToHallucinatoryGasFunction(self, other, str)
-    PrintlnToFileWithTimeStamp("BEG", 'w')
-
     local selfRef = GetObj.StrRefNew(self)
     if not EvaluateCondition("UNIT_HAS_MODELCONDITION", selfRef, "EMOTION_DISSIDENT") then
         ReactToHallucinatoryGas(selfRef)
@@ -518,7 +516,6 @@ function ExposedToHallucinatoryGasFunction(self, other, str)
     -- TODO(minor): recover the original stance of this unit after the dissident emotion ends
     -- TODO(urgent): how to build an asymmetric enemy relation, which means the dissident unit can attack its friends but the friends cannot attack it.
     -- TODO(more urgent): how to make the dissident unit not attack the chaos drone? NON_AUTOACQUIRABLE?
-    PrintlnToFileWithTimeStamp("END ")
 end
 
 function ReactToHallucinatoryGas(objRef)

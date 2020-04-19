@@ -6,4 +6,15 @@
         Duration="20s"
         ModelConditionsSet="EMOTION_DISSIDENT" >
     </AttributeModifier>
+
+    <AttributeModifier
+        id="AttributeModifer_ChaosGenerator"
+        ObjectStatusToSet="GENERIC_TOGGLE_STATE" >
+        <Modifier Type="SPEED" Value="0%"/>
+    </AttributeModifier>
+
+    <AttributeModifier
+        id="AttributeModifer_ChaosGeneratorTrigger"
+        ObjectStatusToSet="GENERIC_TOGGLE_STATE" >
+    </AttributeModifier>
 </AssetDeclaration>

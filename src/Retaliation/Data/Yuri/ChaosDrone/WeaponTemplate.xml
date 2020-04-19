@@ -2,7 +2,7 @@
 <AssetDeclaration xmlns="uri:ea.com:eala:asset" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <WeaponTemplate
         id="ChaosDroneCannon"
-        AttackRange="150.0"
+        AttackRange="200.0"
         WeaponSpeed="1000"
         MinWeaponSpeed="5000"
         MaxWeaponSpeed="5000"
@@ -63,22 +63,25 @@
 
     <WeaponTemplate
         id="ChaosDroneTargetPainter"
-        AttackRange="300.0"
+        AttackRange="200.0"
         CanFireWhileMoving="true"
-        WeaponSpeed="999999.0"
-        AcceptableAimDelta="20d"
+        AcceptableAimDelta="180d"
         ReAcquireDetailType="PER_CLIP"
-        Flags="ATTACK_NEEDS_LINE_OF_SIGHT NOT_ATTRACTED_BY_MAGNETS"
+        Flags="NOT_ATTRACTED_BY_MAGNETS"
         RequiredAntiMask="ANTI_VEHICLE ANTI_INFANTRY"
-        ForbiddenAntiMask="ANTI_STRUCTURE ANTI_SUBMERGED ANTI_AIRBORNE_VEHICLE ANTI_AIRBORNE_INFANTRY">
+        ForbiddenAntiMask="ANTI_STRUCTURE ANTI_SUBMERGED ANTI_AIRBORNE_VEHICLE ANTI_AIRBORNE_INFANTRY" >
         <FiringDuration
             MinSeconds="0.1s"
             MaxSeconds="0.1s" />
         <Nuggets>
-            <!-- for visual display only -->
-            <ActivateLaserNugget
-                Lifetime="1.1s"
-                LaserId="1">
+            <!-- Display the taregt object in red, like Natasha's laser -->
+            <TintObjectsNugget
+                      PreColorTime="0s"
+                      SustainedColorTime="20.0s"
+                      PostColorTime="0s"
+                      Frequency="1"
+                      Amplitude="0"
+                      Radius="200.0" >
                 <SpecialObjectFilter
                     Rule="ANY"
                     Include="INFANTRY VEHICLE"
@@ -89,22 +92,12 @@
                       <ExcludeThing>JapanBalloonBomb</ExcludeThing>
                       <ExcludeThing>AlliedSupersonicBomber</ExcludeThing>
                    </SpecialObjectFilter>
-            </ActivateLaserNugget>
-
-            <!-- Display the taregt object in red, like Natasha's laser -->
-            <TintObjectsNugget
-                      PreColorTime="0.3s"
-                      SustainedColorTime="20.0s"
-                      PostColorTime="0s"
-                      Frequency="1"
-                      Amplitude="0"
-                      ForbiddenTargetModelCondition="EMOTION_DISSIDENT">
                 <Color R="2" G="0" B="0" />
             </TintObjectsNugget>
 
-            <LuaEventNugget 
-                      EventName="ExposedToHallucinatoryGas" 
-                      Radius="0.0"
+            <LuaEventNugget
+                      EventName="ExposedToHallucinatoryGas"
+                      Radius="200.0"
                       SendToEnemies="true"
                       SendToAllies="true"
                       SendToNeutral="true" />

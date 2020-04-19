@@ -2,7 +2,7 @@
 <AssetDeclaration xmlns="uri:ea.com:eala:asset">
     <LogicCommandSet
         id="ChaosDroneCommandSet">
-        <Cmd>Command_ToggleTargetPainter</Cmd>
+        <Cmd>Command_ToggleChaosGenerator</Cmd>
         <Cmd>Command_AttackMove</Cmd>
         <Cmd>Command_MoveToPositionAndCollect</Cmd>
     </LogicCommandSet>

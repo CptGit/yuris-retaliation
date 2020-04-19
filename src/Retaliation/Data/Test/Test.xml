@@ -7,5 +7,6 @@
         <Include type="all" source="DATA:Soviet/Units/SovietAntiInfantryInfantry.xml" />
         <Include type="all" source="DATA:Allied/Units/AlliedAntiVehicleInfantry.xml" />
         <Include type="all" source="DATA:Allied/Units/AlliedAntiInfantryInfantry.xml" />
+        <Include type="all" source="DATA:Allied/Units/AlliedAntiInfantryVehicle.xml" />
     </Includes>
 </AssetDeclaration>

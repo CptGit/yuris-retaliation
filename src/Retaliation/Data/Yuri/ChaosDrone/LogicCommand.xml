@@ -5,4 +5,11 @@
         id="Command_ConstructChaosDrone">
         <Object>ChaosDrone</Object>
     </LogicCommand>
+
+    <LogicCommand
+        Type="SPECIAL_POWER"
+        id="Command_ToggleChaosGenerator">
+        <SpecialPower>SpecialPower_ToggleChaosGenerator</SpecialPower>
+        <AISpecialPowerInfo Heuristic="TOGGLE" Manager="MICRO_MANAGER"/>
+    </LogicCommand>
 </AssetDeclaration>

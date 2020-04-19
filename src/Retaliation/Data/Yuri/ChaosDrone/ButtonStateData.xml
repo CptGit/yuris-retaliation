@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<AssetDeclaration xmlns="uri:ea.com:eala:asset">
+    <ButtonSingleStateData
+        id="ButtonStateToggleChaosGenerator">
+        <State
+            Image="SUA_TeslaTrooper_EMP"
+            Title="NAME:ActivateShortCircuit"
+            Description="DESC:ActivateShortCircuit" />
+    </ButtonSingleStateData>
+
+    <ButtonSingleStateData
+        id="ButtonStateToggleChaosGeneratorOff">
+        <State
+            Image="SUA_TeslaTrooper_Teslaguns"
+            Title="NAME:ActivateShortCircuitOff"
+            Description="DESC:ActivateShortCircuitOff" />
+    </ButtonSingleStateData>
+</AssetDeclaration>

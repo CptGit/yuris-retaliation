@@ -2,9 +2,13 @@
 <AssetDeclaration xmlns="uri:ea.com:eala:asset">
     <Includes>
         <Include type="all" source="AttributeModifier.xml" />
+        <Include type="all" source="ButtonStateData.xml" />
+        <Include type="all" source="ButtonTemplate.xml" />
         <Include type="all" source="GameObject.xml" />
         <Include type="all" source="LogicCommand.xml" />
         <Include type="all" source="LogicCommandSet.xml" />
+        <Include type="all" source="SpecialPowerTemplate.xml" />
+        <Include type="all" source="UnitAbilityButtonTemplate.xml" />
         <Include type="all" source="WeaponTemplate.xml" />
     </Includes>
 </AssetDeclaration>
