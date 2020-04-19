@@ -76,6 +76,10 @@
         <!-- Triggered by Chaos Drone's weapon -->
         <ScriptedEvent Name="ExposedToHallucinatoryGas" /> <!-- ExposedToHallucinatoryGas(self, other, string) other is object generating the scripted event. -->
 
+        <!-- Triggered by Chaos Drone's primary weapon. This event is supposed
+        to be handled by only the generator itslef, which is the chaos drone
+        firing the weapon. -->
+        <ScriptedEvent Name="ReleasingHallucinatoryGas" /> <!-- ReleasingHallucinatoryGas(self, other, string) other is object generating the scripted event. -->
         <!-- CUSTOM END -->
     </Events>
 
@@ -96,6 +100,12 @@
             DebugSingleStep="false" />
     </EventList>
 
+    <EventList Name="ReleasingHallucinatoryGasEvenList" Inherit="BaseScriptFunctions">
+        <EventHandler
+            EventName="ReleasingHallucinatoryGas"
+            ScriptFunctionName="ReleasingHallucinatoryGasFunction"
+            DebugSingleStep="false" />
+    </EventList>
     <!-- CUSTOM END -->
 
     <!-- RA3 EVENTS - CnC3 BELOW -->

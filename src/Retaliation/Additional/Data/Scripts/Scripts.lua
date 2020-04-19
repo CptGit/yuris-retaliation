@@ -524,6 +524,10 @@ function ReactToHallucinatoryGas(objRef)
     ExecuteAction("UNIT_SET_MODELCONDITION_FOR_DURATION", objRef, "EMOTION_DISSIDENT", 20, 100)
 end
 
+function ReleasingHallucinatoryGasFunction(self)
+    local selfRef = GetObj.StrRefNew(self)
+    ExecuteAction("NAMED_USE_COMMANDBUTTON_ABILITY", selfRef, "Command_ToggleChaosGenerator")
+end
 -- ExecuteAction("NAMED_USE_COMMANDBUTTON_ABILITY", self, "Command_ToggleTargetPainter")
 -- ObjectDoSpecialPower(self, "SpecialPower_ToggleTargetPainter") not working
 -- ObjectSetObjectStatus(self, "DESTROYED")

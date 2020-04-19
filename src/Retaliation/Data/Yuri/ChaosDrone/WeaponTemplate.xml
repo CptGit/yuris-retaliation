@@ -3,73 +3,34 @@
     <WeaponTemplate
         id="ChaosDroneCannon"
         AttackRange="200.0"
-        WeaponSpeed="1000"
-        MinWeaponSpeed="5000"
-        MaxWeaponSpeed="5000"
-        AcceptableAimDelta="20d"
-        ClipSize="1"
-        WeaponRecoil="5d"
-        AutoReloadsClip="AUTO"
-        Flags="ATTACK_NEEDS_LINE_OF_SIGHT"
-        CanFireWhileMoving="true"
-        RequiredAntiMask="ANTI_WATER ANTI_GROUND ANTI_STRUCTURE"
-        FireSound="ALL_Guardian_WeaponFire"
-        FireFX="FX_AlliedTankGun"
-        FireVeteranFX="FX_AlliedTankGun_Vet">
+        CanFireWhileMoving="false"
+        AcceptableAimDelta="180d"
+        ReAcquireDetailType="PER_CLIP"
+        Flags="NOT_ATTRACTED_BY_MAGNETS"
+        RequiredAntiMask="ANTI_VEHICLE ANTI_INFANTRY"
+        ForbiddenAntiMask="ANTI_STRUCTURE ANTI_SUBMERGED ANTI_AIRBORNE_VEHICLE ANTI_AIRBORNE_INFANTRY"
+        RadiusDamageAffects="ENEMIES NEUTRALS" 
+        DamageDealtAtSelfPosition="true" >
         <FiringDuration
-            MinSeconds="0.2s"
-            MaxSeconds="0.2s" />
-        <ClipReloadTime
-            MinSeconds="1.8s"
-            MaxSeconds="1.8s" />
+            MinSeconds="0.1s"
+            MaxSeconds="0.1s" />
         <Nuggets>
-            <ProjectileNugget
-                WarheadTemplate="ChaosDroneWarhead"
-                ProjectileTemplate="AlliedAntiVehicleVehicleTech1Projectile">
-                <VeterancyProjectiles
-                    VeterancyLevel="HEROIC"
-                    ProjectileTemplate="AlliedAntiVehicleVehicleTech1Projectile"/>
-            </ProjectileNugget>
-            <!--DamageNugget
-                Damage="60.0"
-                DamageType="CANNON"
-                DamageFXType="ALLIED_CANNON"
-                DeathType="EXPLODED" />
-            <SuppressionNugget
-                Radius="20.0"
-                Suppression="10"
-                DurationSeconds="3s" /-->
-            <InformTargetNugget />
-        </Nuggets>
-    </WeaponTemplate>
-
-    <WeaponTemplate
-        id="ChaosDroneWarhead"
-        RadiusDamageAffects="ALLIES ENEMIES NEUTRALS"
-        RequiredAntiMask="ANTI_GROUND ANTI_STRUCTURE ANTI_WATER"
-        Flags="NOT_ATTRACTED_BY_MAGNETS">
-        <Nuggets> <!-- Original damage is 60.0 -->
-            <DamageNugget
-                Damage="600.0"
-                DamageType="CANNON"
-                DamageFXType="ALLIED_CANNON"
-                DeathType="EXPLODED" />
-            <SuppressionNugget
-                Radius="20.0"
-                Suppression="10"
-                DurationSeconds="3s" />
+            <LuaEventNugget
+                      EventName="ReleasingHallucinatoryGas"
+                      Radius="0.0"
+                      SendToEnemies="true"
+                      SendToAllies="true"
+                      SendToNeutral="true" />
         </Nuggets>
     </WeaponTemplate>
 
     <WeaponTemplate
         id="ChaosDroneTargetPainter"
         AttackRange="200.0"
-        CanFireWhileMoving="true"
-        AcceptableAimDelta="180d"
-        ReAcquireDetailType="PER_CLIP"
         Flags="NOT_ATTRACTED_BY_MAGNETS"
         RequiredAntiMask="ANTI_VEHICLE ANTI_INFANTRY"
-        ForbiddenAntiMask="ANTI_STRUCTURE ANTI_SUBMERGED ANTI_AIRBORNE_VEHICLE ANTI_AIRBORNE_INFANTRY" >
+        ForbiddenAntiMask="ANTI_STRUCTURE ANTI_SUBMERGED ANTI_AIRBORNE_VEHICLE ANTI_AIRBORNE_INFANTRY"
+        RadiusDamageAffects="ENEMIES NEUTRALS" >
         <FiringDuration
             MinSeconds="0.1s"
             MaxSeconds="0.1s" />
@@ -84,6 +45,7 @@
                       Radius="200.0" >
                 <SpecialObjectFilter
                     Rule="ANY"
+                    Relationship="ENEMIES NEUTRAL"
                     Include="INFANTRY VEHICLE"
                     StatusBitFlagsExclude="AIRBORNE_TARGET">
                       <ExcludeThing>BaseSovietSupportBomber</ExcludeThing>

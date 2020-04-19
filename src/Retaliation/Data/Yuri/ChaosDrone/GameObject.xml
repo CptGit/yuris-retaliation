@@ -344,8 +344,9 @@
                 UpdateModuleStartsAttack="true" />
             <ToggleStatusSpecialAbilityUpdate
                 id="ModuleTag_ToggleChaosGeneratorUpdate"
-                Options="RECONSTITUTE_STORED_COMMAND"
-                SpecialPowerTemplate="SpecialPower_ToggleChaosGenerator">
+                SpecialPowerTemplate="SpecialPower_ToggleChaosGenerator"
+                 Options="RECONSTITUTE_STORED_COMMAND"
+                ReloadAllWeaponsOnToggle="false" >
 
                 <ToggleState EnterStateSound="ALL_Guardian_PainterOff">
                     <SkirmishAiInfo
@@ -387,7 +388,7 @@
             <LUAEventList
                 id="ModuleTag_LUAEventList"
                 xai:joinAction="Replace"
-                EventListName="DummyEventlist" />
+                EventListName="ReleasingHallucinatoryGasEvenList" />
         </Behaviors>
         <AI>
             <AIUpdate
