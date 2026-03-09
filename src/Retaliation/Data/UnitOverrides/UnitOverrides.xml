@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AssetDeclaration xmlns="uri:ea.com:eala:asset" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <Tags></Tags>
+    <Includes>
+        <Include type="instance" source="DATA:BaseObjects/BaseInfantry.xml" />
+        <Include type="instance" source="DATA:Soviet/Units/SovietAntiInfantryInfantry.xml" />
+    </Includes>
+
+    <!-- Override vanilla units to add LUAEventList so they can receive ScriptedEvents.
+         Pattern: inherit from self + add LUAEventList behavior. -->
+
+    <!-- Soviet Conscript -->
+    <GameObject
+        id="SovietAntiInfantryInfantry"
+        inheritFrom="SovietAntiInfantryInfantry">
+        <Behaviors>
+            <LUAEventList
+                id="ModuleTag_LUAEventList"
+                EventListName="BaseScriptFunctions" />
+        </Behaviors>
+    </GameObject>
+</AssetDeclaration>

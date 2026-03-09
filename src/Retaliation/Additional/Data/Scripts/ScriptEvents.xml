@@ -73,13 +73,14 @@
 
         <!-- CUSTOM -->
 
-        <!-- Triggered by Chaos Drone's weapon -->
-        <ScriptedEvent Name="ExposedToHallucinatoryGas" /> <!-- ExposedToHallucinatoryGas(self, other, string) other is object generating the scripted event. -->
+        <!-- Dispatched by LuaEventNugget in ChaosDroneGasAura weapon to enemies in range. -->
+        <ScriptedEvent Name="BecomeDissident" />
 
-        <!-- Triggered by Chaos Drone's primary weapon. This event is supposed
-        to be handled by only the generator itslef, which is the chaos drone
-        firing the weapon. -->
-        <ScriptedEvent Name="ReleasingHallucinatoryGas" /> <!-- ReleasingHallucinatoryGas(self, other, string) other is object generating the scripted event. -->
+        <!-- Fired when EMOTION_DISSIDENT expires (set by Lua via UNIT_SET_MODELCONDITION_FOR_DURATION).
+             Lua-set model conditions DO trigger ModelConditionEvents (unlike AttributeModifier). -->
+        <ModelConditionEvent Name="RecoverFromDissident">
+            <Conditions>-EMOTION_DISSIDENT -DYING</Conditions>
+        </ModelConditionEvent>
         <!-- CUSTOM END -->
     </Events>
 
@@ -89,21 +90,33 @@
     the parent. That is why I move BaseScriptFunctions here. -->
     <EventList Name="BaseScriptFunctions">
         <!-- If there are any events that need to apply to all units, put them here. jba -->
+
+        <!-- Dissident (Chaos Drone gas) handlers — must be here so ALL units respond,
+             even those with custom EventLists that inherit BaseScriptFunctions. -->
+        <EventHandler
+            EventName="OnCreated"
+            ScriptFunctionName="OnBaseUnitCreated"
+            DebugSingleStep="false" />
+        <EventHandler
+            EventName="OnDamaged"
+            ScriptFunctionName="OnBaseUnitDamaged"
+            DebugSingleStep="false" />
+        <EventHandler
+            EventName="BecomeDissident"
+            ScriptFunctionName="BecomeDissidentFunction"
+            DebugSingleStep="false" />
+        <EventHandler
+            EventName="RecoverFromDissident"
+            ScriptFunctionName="RecoverFromDissidentFunction"
+            DebugSingleStep="false" />
     </EventList>
 
     <!-- CUSTOM -->
 
-    <EventList Name="ExposedToHallucinatoryGasEvenList" Inherit="BaseScriptFunctions">
+    <EventList Name="ChaosDroneFunctions" Inherit="BaseScriptFunctions">
         <EventHandler
-            EventName="ExposedToHallucinatoryGas"
-            ScriptFunctionName="ExposedToHallucinatoryGasFunction"
-            DebugSingleStep="false" />
-    </EventList>
-
-    <EventList Name="ReleasingHallucinatoryGasEvenList" Inherit="BaseScriptFunctions">
-        <EventHandler
-            EventName="ReleasingHallucinatoryGas"
-            ScriptFunctionName="ReleasingHallucinatoryGasFunction"
+            EventName="OnCreated"
+            ScriptFunctionName="OnChaosDroneCreated"
             DebugSingleStep="false" />
     </EventList>
     <!-- CUSTOM END -->
@@ -122,7 +135,7 @@
         <EventHandler EventName="OnCreated"	ScriptFunctionName="OnSovietAntiVehicleVehicleTech1Created" DebugSingleStep="false"/>
     </EventList>
 
-    <EventList Name="AlliedAntiVehicleInfantryFunctions" Inherit="ExposedToHallucinatoryGasEvenList">
+    <EventList Name="AlliedAntiVehicleInfantryFunctions" Inherit="BaseScriptFunctions">
         <EventHandler EventName="OnGenericEvent" ScriptFunctionName="OnAlliedAntiVehicleInfantryGenericEvent" DebugSingleStep="false"/>
     </EventList>
 

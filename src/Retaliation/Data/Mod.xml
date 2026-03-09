@@ -11,7 +11,10 @@
         <!-- 注册我们所修改的文件，注意路径要对上哈。-->
         <!-- 同目录下的文件直接填写文件名即可。-->
         <Include type="all" source="CommandData.xml" />
+        <Include type="all" source="BaseObjects/BaseInfantry.xml" />
+        <Include type="all" source="BaseObjects/BaseVehicle.xml" />
         <Include type="all" source="Yuri/Yuri.xml" />
+        <Include type="all" source="UnitOverrides/UnitOverrides.xml" />
 
         <!-- Modification to ease our testing. Uncomment them out before release. -->
         <Include type="all" source="Test/Test.xml" />

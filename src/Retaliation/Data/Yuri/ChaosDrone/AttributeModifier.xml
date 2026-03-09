@@ -4,7 +4,7 @@
         id="AttributeModifier_Hallucinate"
         Category="NONE"
         Duration="20s"
-        ModelConditionsSet="EMOTION_DISSIDENT" >
+        ObjectStatusToSet="NON_AUTOACQUIRABLE" >
     </AttributeModifier>
 
     <AttributeModifier

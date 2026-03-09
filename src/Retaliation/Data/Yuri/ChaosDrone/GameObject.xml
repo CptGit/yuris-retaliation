@@ -20,6 +20,9 @@
             type="instance"
             source="ART:EXTnkTrack.xml" />
         <Include
+            type="instance"
+            source="ART:fxring01.xml" />
+        <Include
             type="all"
             source="ART:FXObeliskLaser.xml" />
         <Include
@@ -45,7 +48,7 @@
         HealthBoxHeightOffset="25"
         BuildTime="1"
         CommandSet="ChaosDroneCommandSet"
-        KindOf="SELECTABLE CAN_ATTACK CAN_CAST_REFLECTIONS SCORE VEHICLE CAN_BE_FAVORITE_UNIT T2_UNIT"
+        KindOf="SELECTABLE NOT_AUTOACQUIRABLE CAN_ATTACK CAN_CAST_REFLECTIONS SCORE VEHICLE CAN_BE_FAVORITE_UNIT T2_UNIT"
         WeaponCategory="CANNON"
         VoicePriority="188"
         EditorName="ChaosDrone"
@@ -108,30 +111,6 @@
                     RetainSubObjects="true">
                     <Model
                         Name="AUAntiVehicleVehicleTech1_SKN" />
-                    <WeaponFireFXBone
-                        WeaponSlotID="1"
-                        WeaponSlotType="PRIMARY_WEAPON"
-                        BoneName="FXBone_Muzzle"/>
-                    <WeaponRecoilBone
-                        WeaponSlotID="1"
-                        WeaponSlotType="PRIMARY_WEAPON"
-                        BoneName="BONE_GUN_MUZZLE"/>
-                    <WeaponLaunchBone
-                        WeaponSlotID="1"
-                        WeaponSlotType="PRIMARY_WEAPON"
-                        BoneName="FXBone_Muzzle" />
-                    <WeaponFireFXBone
-                        WeaponSlotID="1"
-                        WeaponSlotType="SECONDARY_WEAPON"
-                        BoneName="FX_Laser" />
-                    <WeaponLaunchBone
-                        WeaponSlotID="1"
-                        WeaponSlotType="SECONDARY_WEAPON"
-                        BoneName="FX_Laser" />
-                    <Turret
-                        TurretNameKey="Bone_Turret"
-                        TurretPitch="Bone_turret_pitch"
-                        TurretID="1" />
                 </ModelConditionState>
 
                 
@@ -199,7 +178,7 @@
                         FXParticleSystemTemplate="AlliedVehicleDamageSmoke"
                         FollowBone="true"/>
                 </ModelConditionState>
-        
+
                 <ModelConditionState
                     ParseCondStateType="PARSE_NORMAL"
                     ConditionsYes="REALLYDAMAGED">
@@ -219,8 +198,8 @@
                     <ParticleSysBone
                         BoneName="FX_Damage01"
                         FXParticleSystemTemplate="AlliedVehicleDamageSmoke"
-                        FollowBone="true"/>          
-                </ModelConditionState> 
+                        FollowBone="true"/>
+                </ModelConditionState>
 
                 <AnimationState
                     ParseCondStateType="PARSE_DEFAULT">
@@ -283,39 +262,24 @@
 
         </Draws>
         <Behaviors>
-            <WeaponSetUpdate
-                id="ModuleTag_WeaponSetUpdate">
-                <WeaponSlotTurret
-                    ID="1">
+            <!-- Attack-based gas weapon: player must order CD to attack a target.
+                 AoE centers on CD (DamageDealtAtSelfPosition) regardless of target. -->
+            <WeaponSetUpdate id="ModuleTag_WeaponSetUpdate">
+                <WeaponSlotTurret ID="1">
                     <Weapon
                         Ordering="PRIMARY_WEAPON"
-                        Template="ChaosDroneCannon"
-                        ForbiddenObjectStatus="GENERIC_TOGGLE_STATE"/>
-                    <Weapon
-                        Ordering="SECONDARY_WEAPON"
-                        Template="ChaosDroneTargetPainter"
-                        ObjectStatus="GENERIC_TOGGLE_STATE"/>
+                        Template="ChaosDroneGasAura" />
                     <TurretSettings
                         TurretTurnRate="360"
-                        MinimumPitch="-30d"
-                        AllowsPitch="true" 
-                        TurretPitchRate="180" 
                         MinIdleScanTime="1.0s"
                         MaxIdleScanTime="4.0s"
-                        MinIdleScanAngle="30.0"
-                        MaxIdleScanAngle="50.0"
-                        ComeToHaltJiggle="3d">
+                        MinIdleScanAngle="0.0"
+                        MaxIdleScanAngle="0.0">
                         <TurretAITargetChooserData
-                            IdleScanDelay="=$FAST_IDLE_SCAN_DELAY"
                             CanAcquireDynamicIfAssignedOutOfRange="true" />
                     </TurretSettings>
                 </WeaponSlotTurret>
             </WeaponSetUpdate>
-            <LaserState
-                id="ModuleTag_LaserState"
-                LaserId="1" >
-                <LaserEndParticleSystem>Allied_Target_LaserEnd</LaserEndParticleSystem>
-            </LaserState>
             <Physics
                 id="ModuleTag_Physics" />
             <CreateObjectDie
@@ -338,65 +302,18 @@
                     FX="FX_AlliedChieftanDie" />
             </FXListBehavior>
 
-            <SpecialPower
-                id="ModuleTag_ToggleChaosGenerator"
-                SpecialPowerTemplate="SpecialPower_ToggleChaosGenerator"
-                UpdateModuleStartsAttack="true" />
-            <ToggleStatusSpecialAbilityUpdate
-                id="ModuleTag_ToggleChaosGeneratorUpdate"
-                SpecialPowerTemplate="SpecialPower_ToggleChaosGenerator"
-                 Options="RECONSTITUTE_STORED_COMMAND"
-                ReloadAllWeaponsOnToggle="false" >
-
-                <ToggleState EnterStateSound="ALL_Guardian_PainterOff">
-                    <SkirmishAiInfo
-                        ToggleHint="TOGGLE_DEFAULT"/>
-                </ToggleState>
-
-                <ToggleState
-                    ObjectStatus="GENERIC_TOGGLE_STATE IMMOBILE IGNORING_STEALTH"
-                    EnterStateSound="ALL_Guardian_PainterOn"
-                    AttributeModifier="AttributeModifer_ChaosGenerator"
-                    ModelConditions="WEAPONSTATE_ONE"
-                    DisabledType="HELD">
-                    <SkirmishAiInfo
-                        ToggleHint="TOGGLE_AOE_ATTACK" >
-                        <StateWeapon
-                            Weapon="ChaosDroneTargetPainter"
-                            AoeAttackEmanationLocation="EMANATE_FROM_SELF"
-                            IsDisablingAttack="true"
-                            AffectsFriendlies="false"
-                            AffectsSelf="false" />
-                    </SkirmishAiInfo>
-                </ToggleState>
-            </ToggleStatusSpecialAbilityUpdate>
-
-            <FireWeaponUpdate
-				id="ModuleTag_FireWeaponUpdate"
-				FireInterval="0.13s"
-				AliveOnly="true"
-				ActiveWhenDisabled="HELD">
-				<FireWeaponNugget
-					WeaponName="ChaosDroneTargetPainter"
-					OneShot="false" />
-				<ObjectStatusValidation
-					RequiredStatus="GENERIC_TOGGLE_STATE" />
-			</FireWeaponUpdate>
-
-            <!-- No idea why "Remove" makes the whole lua not work for other
-            units so I have to set a dummy eventlist here. -->
             <LUAEventList
                 id="ModuleTag_LUAEventList"
                 xai:joinAction="Replace"
-                EventListName="ReleasingHallucinatoryGasEvenList" />
+                EventListName="ChaosDroneFunctions" />
         </Behaviors>
         <AI>
             <AIUpdate
                 id="ModuleTag_AI"
-                AutoAcquireEnemiesWhenIdle="YES"
+                AutoAcquireEnemiesWhenIdle="NO"
                 StateMachine="UnitAIStateMachine">
                 <UnitAITargetChooserData
-                    CanPickDynamicTargets="false" />
+                    CanPickDynamicTargets="true" />
             </AIUpdate>
         </AI>
         <Body>

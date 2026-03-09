@@ -2,8 +2,8 @@
 <AssetDeclaration xmlns="uri:ea.com:eala:asset">
     <LogicCommandSet
         id="ChaosDroneCommandSet">
-        <Cmd>Command_ToggleChaosGenerator</Cmd>
         <Cmd>Command_AttackMove</Cmd>
+        <Cmd>Command_Stop</Cmd>
         <Cmd>Command_MoveToPositionAndCollect</Cmd>
     </LogicCommandSet>
 </AssetDeclaration>

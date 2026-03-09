@@ -451,9 +451,21 @@ STANCE_TYPE = {
     ["GUARD"]=0, ["AGGRESSIVE"]=1, ["HOLD_POSITION"]=2, ["HOLD_FIRE"]=3
 }
 
+-- RA3 ObjectStatus indices for use with UNIT_CHANGE_OBJECT_STATUS.
+-- Source: RA3 XSD (verified against LUATESTv2 mod).
+ObjectStatusTable = {
+    ["NO_ATTACK"]=5, ["NO_SPECIAL_ABILITY"]=6,
+    ["NO_AUTO_ACQUIRE"]=25, ["NO_ATTACK_FROM_AI"]=28,
+    ["IMMOBILE"]=51, ["ENRAGED"]=58, ["RAMPAGING"]=60,
+    ["UNATTACKABLE"]=63, ["TEMPORARILY_DEFECTED"]=65,
+    ["UNCONTROLLABLY_SCARED"]=72, ["IGNORE_AI_COMMAND"]=77,
+    ["FORCE_ATTACKING"]=146, ["NON_AUTOACQUIRABLE"]=180,
+    ["NO_BRIBE"]=204, ["SCRAMBLED"]=220
+}
+
 ----------------------------------- Configs ------------------------------------
 
-LIVE_OUTPUT_FILE = "D:/Games/yuris-retaliation/scripts/LIVE_OUTPUT.txt"
+LIVE_OUTPUT_FILE = "D:/Games/RA3_modding/yuris-retaliation/scripts/LIVE_OUTPUT.txt"
 
 ---------------------------------- Utilities -----------------------------------
 
@@ -505,39 +517,126 @@ function GetObj.StrRefNew(object)
     return StrRef
 end
 
+-- Returns the engine player index (0-based) from ObjectDescription.
+-- Display "player N" → engine Player_(N-1).
+-- e.g. "owned by player 3 (Easy)" → engine Player_2
+function GetObj.OwnerPlayerIndex(object)
+    local desc = ObjectDescription(object)
+    local _, _, numStr = strfind(desc, "player (%d+)")
+    return tonumber(numStr) - 1
+end
+
+-- Returns full team path "Player_X/teamName" for use with UNIT_SET_TEAM.
+-- Uses ObjectDescription to get the correct Player_X prefix,
+-- since ObjectTeamName can return tactical team names like
+-- "BalancedAttackGround_EASY_DefenseAvoidanceAttack_0_0".
+function GetObj.TeamName(object)
+    local team = ObjectTeamName(object)
+    local playerIdx = GetObj.OwnerPlayerIndex(object)
+    return "Player_" .. playerIdx .. "/" .. team
+end
+
+-- Returns unique ID string for a unit (for use as table key)
+function GetObj.UniqueId(object)
+    local desc = ObjectDescription(object)
+    return strsub(desc, strfind(desc,"t",1,true)+2, strfind(desc,"[",1,true)-2)
+end
+
+--------------------------- Chaos Drone globals --------------------------------
+
+-- Chaos Drone owner info. Set when CD is created.
+ChaosDroneOwnerTeam = nil
+ChaosDroneRef = nil
+
+-- -- Maps unit unique ID → original team string. Used to restore team on expiry.
+-- DissidentOriginalTeam = {}
+
 --------------------------- Ingame event functions -----------------------------
 
-function ExposedToHallucinatoryGasFunction(self, other, str)
-    local selfRef = GetObj.StrRefNew(self)
-    if not EvaluateCondition("UNIT_HAS_MODELCONDITION", selfRef, "EMOTION_DISSIDENT") then
-        ReactToHallucinatoryGas(selfRef)
+-- DEBUG: fires on ANY unit with BaseScriptFunctions to verify the override works.
+function OnBaseUnitCreated(self)
+    PrintlnToFileWithTimeStamp("[OnBaseUnitCreated] " .. ObjectDescription(self))
+end
+
+-- DEBUG: fires when any unit with BaseScriptFunctions takes damage (even 0 damage from gas).
+-- function OnBaseUnitDamaged(self, other)
+--     PrintlnToFileWithTimeStamp("[OnDamaged] " .. ObjectDescription(self) .. " by " .. tostring(other))
+-- end
+
+-- Called when Chaos Drone is created. Stores CD's owner team for dissident logic.
+function OnChaosDroneCreated(self)
+    ChaosDroneOwnerTeam = GetObj.TeamName(self)
+    ChaosDroneRef = GetObj.StrRefNew(self)
+    PrintlnToFileWithTimeStamp("[OnChaosDroneCreated] team=" .. tostring(ChaosDroneOwnerTeam) .. " ref=" .. tostring(ChaosDroneRef))
+end
+
+-- Called via LuaEventNugget ScriptedEvent when gas weapon hits an enemy.
+-- ScriptedEvent handler signature: (self, other) where other = CD (weapon owner).
+function BecomeDissidentFunction(self, other)
+    local selfId = GetObj.UniqueId(self)
+
+    -- -- Guard: skip if already a dissident (weapon fires every 2s, don't reset orders)
+    -- if DissidentOriginalTeam[selfId] ~= nil then
+    --     return
+    -- end
+
+    PrintlnToFileWithTimeStamp("[BecomeDissident] ENTER unit=" .. ObjectDescription(self))
+
+    if ChaosDroneOwnerTeam == nil then
+        PrintlnToFileWithTimeStamp("[BecomeDissident] ABORT: ChaosDroneOwnerTeam is nil")
+        return
     end
 
-    -- TODO(minor): recover the original stance of this unit after the dissident emotion ends
-    -- TODO(urgent): how to build an asymmetric enemy relation, which means the dissident unit can attack its friends but the friends cannot attack it.
-    -- TODO(more urgent): how to make the dissident unit not attack the chaos drone? NON_AUTOACQUIRABLE?
-end
-
-function ReactToHallucinatoryGas(objRef)
-    ExecuteAction("NAMED_STOP", objRef)
-    ExecuteAction("UNIT_SET_STANCE", objRef, STANCE_TYPE["AGGRESSIVE"])
-    ExecuteAction("UNIT_SET_MODELCONDITION_FOR_DURATION", objRef, "EMOTION_DISSIDENT", 20, 100)
-end
-
-function ReleasingHallucinatoryGasFunction(self)
     local selfRef = GetObj.StrRefNew(self)
-    ExecuteAction("NAMED_USE_COMMANDBUTTON_ABILITY", selfRef, "Command_ToggleChaosGenerator")
-end
--- ExecuteAction("NAMED_USE_COMMANDBUTTON_ABILITY", self, "Command_ToggleTargetPainter")
--- ObjectDoSpecialPower(self, "SpecialPower_ToggleTargetPainter") not working
--- ObjectSetObjectStatus(self, "DESTROYED")
--- kill(other)
--- PrintInGame("Killed") not working
-----------------------------
--- ExecuteAction("UNIT_CHANGE_OBJECT_STATUS", self, "NON_AUTOACQUIRABLE", true)
--- ExecuteAction("UNIT_SET_MODELCONDITION_GENERIC", self, "EMOTION_DISSIDENT", 20)
--- ExecuteAction("UNIT_SET_MODELCONDITION_GENERIC", UNIT, MODEL_CONDITION, DURATION)
+    PrintlnToFileWithTimeStamp("[BecomeDissident] selfRef=" .. tostring(selfRef) .. " selfId=" .. tostring(selfId))
 
--- ExecuteAction("NAMED_SET_EMOTICON", UNIT, EMOTICON, REAL)
--- Unit_/ Set emoticon for duration (-1.0 permanent, otherwise duration in sec).
--- EMOTICON	= { ["EMOTION_UNCONTROLLABLY_AFRAID"]=0, ["EMOTION_TAUNTING"]=1, ["EMOTION_QUARRELSOME"]=2, ["EMOTION_POINTING"]=3, ["EMOTION_PANIC"]=4, ["EMOTION_MORALE_LOW"]=5, ["EMOTION_MORALE_HIGH"]=6, ["EMOTION_LOOK_TO_SKY"]=7, ["EMOTION_GUNG_HO"]=8, ["EMOTION_DOOM"]=9, ["EMOTION_DISSIDENT"]=10, ["EMOTION_COWER"]=11, ["EMOTION_CHEER_FOR_ABOUT_TO_CRUSH"]=12, ["EMOTION_CELEBRATING"]=13, ["EMOTION_BRACE_FOR_BEING_CRUSHED"]=14, ["EMOTION_AMUSED"]=15, ["EMOTION_ALERT"]=16, ["EMOTION_AFRAID"]=17 }
+    -- -- Save original team BEFORE switching
+    -- DissidentOriginalTeam[selfId] = GetObj.TeamName(self)
+    -- PrintlnToFileWithTimeStamp("[BecomeDissident] saved originalTeam=" .. tostring(DissidentOriginalTeam[selfId]))
+
+    -- -- Switch team — CD becomes ally, former allies become enemies (R4.3)
+    -- PrintlnToFileWithTimeStamp("[BecomeDissident] UNIT_SET_TEAM -> " .. tostring(ChaosDroneOwnerTeam))
+    -- ExecuteAction("UNIT_SET_TEAM", selfRef, ChaosDroneOwnerTeam)
+
+    -- Make uncontrollable (R4.2)
+    ObjectForbidPlayerCommands(self, 1)
+
+    -- Make untargetable by former allies (R4.5)
+    ExecuteAction("UNIT_CHANGE_OBJECT_STATUS", selfRef, ObjectStatusTable["UNATTACKABLE"], 1)
+
+    -- Set aggressive stance — auto-acquire former allies AND buildings
+    ExecuteAction("UNIT_SET_STANCE", selfRef, STANCE_TYPE["AGGRESSIVE"])
+
+    -- Clear orders, then hunt
+    ExecuteAction("NAMED_STOP", selfRef)
+    ExecuteAction("NAMED_HUNT", selfRef)
+
+    -- Set EMOTION_DISSIDENT for 20s. When this expires,
+    -- RecoverFromDissident (-EMOTION_DISSIDENT) will fire.
+    ExecuteAction("UNIT_SET_MODELCONDITION_FOR_DURATION", selfRef, "EMOTION_DISSIDENT", 20, 100)
+
+    PrintlnToFileWithTimeStamp("[BecomeDissident] EXIT — hunting")
+end
+
+-- Called when EMOTION_DISSIDENT expires (-EMOTION_DISSIDENT -DYING).
+function RecoverFromDissidentFunction(self)
+    local selfRef = GetObj.StrRefNew(self)
+    local selfId = GetObj.UniqueId(self)
+    PrintlnToFileWithTimeStamp("[RecoverFromDissident] ENTER unit=" .. ObjectDescription(self) .. " selfRef=" .. tostring(selfRef))
+
+    ExecuteAction("NAMED_STOP", selfRef)
+
+    -- if DissidentOriginalTeam[selfId] ~= nil then
+    --     PrintlnToFileWithTimeStamp("[RecoverFromDissident] restoring team=" .. tostring(DissidentOriginalTeam[selfId]))
+    --     ExecuteAction("UNIT_SET_TEAM", selfRef, DissidentOriginalTeam[selfId])
+    --     DissidentOriginalTeam[selfId] = nil
+    -- else
+    --     PrintlnToFileWithTimeStamp("[RecoverFromDissident] WARNING: no original team saved for id=" .. tostring(selfId))
+    -- end
+
+    ExecuteAction("UNIT_SET_STANCE", selfRef, STANCE_TYPE["GUARD"])
+    ExecuteAction("UNIT_CHANGE_OBJECT_STATUS", selfRef, ObjectStatusTable["UNATTACKABLE"], 0)
+    ExecuteAction("UNIT_AI_TRANSFER", selfRef, 0)
+    ObjectForbidPlayerCommands(self, 0)
+    PrintlnToFileWithTimeStamp("[RecoverFromDissident] EXIT")
+end

@@ -1,212 +1,71 @@
 <?xml version="1.0" encoding="utf-8"?>
 <AssetDeclaration xmlns="uri:ea.com:eala:asset" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <!-- Attack weapon: AoE gas centered on the drone (DamageDealtAtSelfPosition).
+         CD must be ordered to attack an enemy to release gas.
+         All nugget effects radiate from the CD's position, not the target. -->
     <WeaponTemplate
-        id="ChaosDroneCannon"
-        AttackRange="200.0"
-        CanFireWhileMoving="false"
+        id="ChaosDroneGasAura"
+        AttackRange="150.0"
         AcceptableAimDelta="180d"
-        ReAcquireDetailType="PER_CLIP"
+        CanFireWhileMoving="true"
         Flags="NOT_ATTRACTED_BY_MAGNETS"
-        RequiredAntiMask="ANTI_VEHICLE ANTI_INFANTRY"
-        ForbiddenAntiMask="ANTI_STRUCTURE ANTI_SUBMERGED ANTI_AIRBORNE_VEHICLE ANTI_AIRBORNE_INFANTRY"
-        RadiusDamageAffects="ENEMIES NEUTRALS" 
-        DamageDealtAtSelfPosition="true" >
+        RequiredAntiMask="ANTI_GROUND"
+        RadiusDamageAffects="ENEMIES NEUTRALS"
+        DamageDealtAtSelfPosition="true"
+        FireFX="FX_ChaosDroneGasRing"
+        ClipSize="1">
         <FiringDuration
-            MinSeconds="0.1s"
-            MaxSeconds="0.1s" />
+            MinSeconds="0.5s"
+            MaxSeconds="0.5s" />
+        <ClipReloadTime
+            MinSeconds="1.5s"
+            MaxSeconds="1.5s" />
         <Nuggets>
-            <LuaEventNugget
-                      EventName="ReleasingHallucinatoryGas"
-                      Radius="0.0"
-                      SendToEnemies="true"
-                      SendToAllies="true"
-                      SendToNeutral="true" />
-        </Nuggets>
-    </WeaponTemplate>
+            <!-- AoE 0-damage hit centered on drone -->
+            <DamageNugget
+                Damage="0.0"
+                Radius="150.0"
+                DamageType="UNRESISTABLE"
+                DeathType="NORMAL" />
 
-    <WeaponTemplate
-        id="ChaosDroneTargetPainter"
-        AttackRange="200.0"
-        Flags="NOT_ATTRACTED_BY_MAGNETS"
-        RequiredAntiMask="ANTI_VEHICLE ANTI_INFANTRY"
-        ForbiddenAntiMask="ANTI_STRUCTURE ANTI_SUBMERGED ANTI_AIRBORNE_VEHICLE ANTI_AIRBORNE_INFANTRY"
-        RadiusDamageAffects="ENEMIES NEUTRALS" >
-        <FiringDuration
-            MinSeconds="0.1s"
-            MaxSeconds="0.1s" />
-        <Nuggets>
-            <!-- Display the taregt object in red, like Natasha's laser -->
-            <TintObjectsNugget
-                      PreColorTime="0s"
-                      SustainedColorTime="20.0s"
-                      PostColorTime="0s"
-                      Frequency="1"
-                      Amplitude="0"
-                      Radius="200.0" >
+            <!-- Apply EMOTION_DISSIDENT via attribute modifier to enemies in range -->
+            <AttributeModifierNugget
+                AttributeModifierName="AttributeModifier_Hallucinate"
+                Radius="150.0">
                 <SpecialObjectFilter
                     Rule="ANY"
                     Relationship="ENEMIES NEUTRAL"
                     Include="INFANTRY VEHICLE"
-                    StatusBitFlagsExclude="AIRBORNE_TARGET">
-                      <ExcludeThing>BaseSovietSupportBomber</ExcludeThing>
-                      <ExcludeThing>Soviet_BombingRun</ExcludeThing>
-                      <ExcludeThing>JapanFinalSquadronAircraft</ExcludeThing>
-                      <ExcludeThing>JapanBalloonBomb</ExcludeThing>
-                      <ExcludeThing>AlliedSupersonicBomber</ExcludeThing>
-                   </SpecialObjectFilter>
-                <Color R="2" G="0" B="0" />
-            </TintObjectsNugget>
+                    StatusBitFlagsExclude="AIRBORNE_TARGET" />
+            </AttributeModifierNugget>
 
-            <LuaEventNugget
-                      EventName="ExposedToHallucinatoryGas"
-                      Radius="200.0"
-                      SendToEnemies="true"
-                      SendToAllies="true"
-                      SendToNeutral="true" />
-
-            <!-- <ParalyzeNugget
-                DurationSeconds="3s"
-                ParalyzeType="EMP" >
-                <SpecialObjectFilter
-                    Rule="ANY"
-                    Include="INFANTRY VEHICLE"
-                    StatusBitFlagsExclude="AIRBORNE_TARGET UNDER_IRON_CURTAIN">
-                    <ExcludeThing>BaseSovietSupportBomber</ExcludeThing>
-                    <ExcludeThing>Soviet_BombingRun</ExcludeThing>
-                    <ExcludeThing>JapanFinalSquadronAircraft</ExcludeThing>
-                    <ExcludeThing>JapanBalloonBomb</ExcludeThing>
-                    <ExcludeThing>AlliedSupersonicBomber</ExcludeThing>
-                </SpecialObjectFilter>
-            </ParalyzeNugget> -->
-
-            <!-- Normal Attribute Modifier -->
-<!--             <AttributeModifierNugget
-                DamageFXType="ALLIED_PAINTER"
-                AttributeModifierName="AttributeMod_TargetPainted">
-                <ForbiddenUpgrade>Upgrade_AlliedHighTechnology</ForbiddenUpgrade>
-            </AttributeModifierNugget> -->
-
-            <!-- Normal Weapon -->
-<!--             <SpecialPowerNugget
-                SpecialPowerTemplate="SpecialPower_PaintTargetTrigger">
-                <ForbiddenUpgrade>Upgrade_AlliedHighTechnology</ForbiddenUpgrade>
-            </SpecialPowerNugget> -->
-
-            <!-- High Technology Attribute Modifier -->
-<!--             <AttributeModifierNugget
-                DamageFXType="ALLIED_PAINTER"
-                AttributeModifierName="AttributeMod_TargetPainted_HighTechnology">
-                <RequiredUpgrade>Upgrade_AlliedHighTechnology</RequiredUpgrade>
-            </AttributeModifierNugget> -->
-            <!-- High Technology Special power weapon -->
-<!--             <SpecialPowerNugget
-                SpecialPowerTemplate="SpecialPower_PaintTargetTrigger_HighTechnology">
-                <RequiredUpgrade>Upgrade_AlliedHighTechnology</RequiredUpgrade>
-            </SpecialPowerNugget> -->
-        </Nuggets>
-    </WeaponTemplate>
-
-    <WeaponTemplate
-        id="NODConfessorGrenade"
-        AttackRange="200.0"
-        WeaponSpeed="1000"
-        RadiusDamageAffects="ALLIES ENEMIES NEUTRALS"
-        ClipSize="1"
-        AcceptableAimDelta="20d"
-        ForbiddenFiringObjectStatus="CLONED"
-        CanFireWhileMoving="false"
-        Flags="ATTACK_NEEDS_LINE_OF_SIGHT NOT_ATTRACTED_BY_MAGNETS"
-        RequiredAntiMask="ANTI_VEHICLE ANTI_INFANTRY"
-        ForbiddenAntiMask="ANTI_STRUCTURE ANTI_SUBMERGED ANTI_AIRBORNE_VEHICLE ANTI_AIRBORNE_INFANTRY">
-        <FiringDuration
-            MinSeconds="0.2s"
-            MaxSeconds="0.2s" />
-        <ClipReloadTime
-            MinSeconds="1.8s"
-            MaxSeconds="1.8s" />
-        <Nuggets>
-            <!-- for visual display only -->
-            <ActivateLaserNugget
-                Lifetime="1.1s"
-                LaserId="1">
-                <SpecialObjectFilter
-                    Rule="ANY"
-                    Include="INFANTRY VEHICLE"
-                    StatusBitFlagsExclude="AIRBORNE_TARGET">
-                      <ExcludeThing>BaseSovietSupportBomber</ExcludeThing>
-                      <ExcludeThing>Soviet_BombingRun</ExcludeThing>
-                      <ExcludeThing>JapanFinalSquadronAircraft</ExcludeThing>
-                      <ExcludeThing>JapanBalloonBomb</ExcludeThing>
-                      <ExcludeThing>AlliedSupersonicBomber</ExcludeThing>
-                   </SpecialObjectFilter>
-            </ActivateLaserNugget>
-            <!-- Display the taregt object in red, like Natasha's laser -->
+            <!-- Tint affected enemies red BEFORE team switch.
+                 Must come before LuaEventNugget which changes the unit's team.
+                 Total = 0+18+2 = 20s matching dissident duration -->
             <TintObjectsNugget
-                      PreColorTime="0.3s"
-                      SustainedColorTime="20.0s"
-                      PostColorTime="0s"
-                      Frequency="1"
-                      Amplitude="0">
-                <Color R="2" G="0" B="0"/>
-            </TintObjectsNugget>
-            <ProjectileNugget
-                ProjectileTemplate="AlliedDefaultMissileProjectile"
-                WarheadTemplate="NODHallucinogenicWeapon" />
-        </Nuggets>
-    </WeaponTemplate>
-
-    <WeaponTemplate
-        id="NODHallucinogenicWeapon"
-        ProjectileCollidesWith  = "ALLIES ENEMIES NEUTRAL STRUCTURES WALLS"
-        RadiusDamageAffects="ENEMIES NEUTRALS"
-        >
-
-        <Nuggets>
-            
-
-            <DamageNugget
-                Damage="0.0"
-                Radius="0.0"
-                DelayTimeSeconds="0.0s"
-                DamageType="GRENADE"
-                DamageFXType="NOD_HALLUCINE"
-                DeathType="EXPLODED" >
-            </DamageNugget>
-
-            <AttributeModifierNugget
-                PartitionFilterTestType="SPHERE"
-                AttributeModifierName="AttributeModifier_Hallucinate"
-                Radius="0" >
+                      PreColorTime="0s"
+                      SustainedColorTime="18.0s"
+                      PostColorTime="2s"
+                      Frequency="0"
+                      Amplitude="0"
+                      Radius="150.0" >
                 <SpecialObjectFilter
                     Rule="ANY"
-                    Include="INFANTRY VEHICLE" />
-            </AttributeModifierNugget>
-
-        </Nuggets>
-    </WeaponTemplate>
-
-    <WeaponTemplate
-        id="NODWarmechRageGenerator"
-        RadiusDamageAffects="ENEMIES NEUTRALS"
-        FireFX="FX_AlliedTankGun">
-        <Nuggets>
-            <DamageNugget
-                Damage="0"
-                Radius="500.0"
-                DelayTimeSeconds="0.0s"
-                DamageType="GRENADE"
-                DamageFXType="NOD_HALLUCINE"
-                DeathType="EXPLODED" >
-            </DamageNugget>
-            <AttributeModifierNugget
-                PartitionFilterTestType="SPHERE"
-                AttributeModifierName="AttributeModifier_Hallucinate"
-                Radius="500" >
-                <SpecialObjectFilter
-                    Rule="ANY"
+                    Relationship="ENEMIES NEUTRAL"
                     Include="INFANTRY VEHICLE"
-                    Exclude="AIRCRAFT" />
-            </AttributeModifierNugget>
+                    StatusBitFlagsExclude="AIRBORNE_TARGET" />
+                <Color R="3" G="0" B="0" />
+            </TintObjectsNugget>
+
+            <!-- Dispatch BecomeDissident ScriptedEvent to enemies in range.
+                 This is the trigger for dissident Lua behavior.
+                 MUST be last nugget — it switches the unit's team. -->
+            <LuaEventNugget
+                EventName="BecomeDissident"
+                Radius="150.0"
+                SendToEnemies="true"
+                SendToNeutral="true"
+                SendToAllies="false" />
         </Nuggets>
     </WeaponTemplate>
 </AssetDeclaration>
