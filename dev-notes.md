@@ -20,6 +20,11 @@ ParalyzeType
 
 LUA
 > In progress
+Evenlist `BaseScriptFunctions` does not work for all units. We need to
+insert `LUAEventList` with it for each unit if we want it to work for
+every unit.
+Now we need to resolve the issue of the affected unit not returning to
+the original control of computer after the gas effect expires.
 
 NON_AUTOACQUIRABLE
 
