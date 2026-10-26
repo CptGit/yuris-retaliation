@@ -91,8 +91,8 @@
     <EventList Name="BaseScriptFunctions">
         <!-- If there are any events that need to apply to all units, put them here. jba -->
 
-        <!-- Dissident (Chaos Drone gas) handlers — must be here so ALL units respond,
-             even those with custom EventLists that inherit BaseScriptFunctions. -->
+        <!-- Base handlers — must be here so ALL units respond, even those with
+             custom EventLists that inherit BaseScriptFunctions. -->
         <EventHandler
             EventName="OnCreated"
             ScriptFunctionName="OnBaseUnitCreated"
@@ -101,10 +101,30 @@
             EventName="OnDamaged"
             ScriptFunctionName="OnBaseUnitDamaged"
             DebugSingleStep="false" />
+
+        <!-- Chaos Drone gas. The victim must DROP the attack order it already
+             had: the engine flips its hostility but never re-evaluates an order
+             that was already issued, so without this the unit keeps shooting
+             its old target (verified in game 2026-10-24).
+
+             This handler lives here, in BaseScriptFunctions, on purpose:
+             BaseInfantry/BaseVehicle already carry
+             <LUAEventList id="ModuleTag_LUAEventList" EventListName="BaseScriptFunctions"/>,
+             and an object honours only ONE LUAEventList module. A second module
+             (e.g. "ModuleTag_DissidentEvents" pointing at a private event list)
+             is silently ignored — that is why the first attempt produced zero
+             [BecomeDissident] lines in the log.
+
+             RecoverFromDissident (below) undoes the UNIT_AI_TRANSFER that
+             BecomeDissidentFunction performs. -->
         <EventHandler
             EventName="BecomeDissident"
             ScriptFunctionName="BecomeDissidentFunction"
             DebugSingleStep="false" />
+        <!-- Hands the unit back to the AI when the effect ends. Works because
+             BecomeDissidentFunction also sets EMOTION_DISSIDENT from Lua with a
+             20s duration — a Lua-set model condition fires ModelConditionEvents,
+             an AttributeModifier-set one does not. -->
         <EventHandler
             EventName="RecoverFromDissident"
             ScriptFunctionName="RecoverFromDissidentFunction"

@@ -563,80 +563,88 @@ end
 --     PrintlnToFileWithTimeStamp("[OnDamaged] " .. ObjectDescription(self) .. " by " .. tostring(other))
 -- end
 
--- Called when Chaos Drone is created. Stores CD's owner team for dissident logic.
+-- Called when a Chaos Drone is created.
 function OnChaosDroneCreated(self)
     ChaosDroneOwnerTeam = GetObj.TeamName(self)
     ChaosDroneRef = GetObj.StrRefNew(self)
     PrintlnToFileWithTimeStamp("[OnChaosDroneCreated] team=" .. tostring(ChaosDroneOwnerTeam) .. " ref=" .. tostring(ChaosDroneRef))
 end
 
--- Called via LuaEventNugget ScriptedEvent when gas weapon hits an enemy.
--- ScriptedEvent handler signature: (self, other) where other = CD (weapon owner).
+--------------------------------------------------------------------
+-- Chaos Drone gas: "dissident" (insane) support
+--------------------------------------------------------------------
+-- The hostility flip, the 20 s duration and the automatic recovery are now
+-- handled by the ENGINE via AttributeModifier_Dissident
+-- (ModelConditionsSet="EMOTION_DISSIDENT"). Verified in game: victims DO turn
+-- on their own teammates.
+--
+-- The one thing the engine does not do: a victim that already had an attack
+-- order keeps firing it at the old target and never re-evaluates. Dropping the
+-- order once is enough — the unit then re-acquires targets by itself.
+--
+-- The gas re-fires every ~2 s, so guard with the effect window. Without the
+-- guard the victim would be stopped again every 2 s and could never attack
+-- anything.
+DissidentUntilFrame = {}             -- uid -> frame at which the effect ends
+DISSIDENT_WINDOW_FRAMES = 20 * 30    -- 20 s effect duration at 30 fps
+
+-- Called via LuaEventNugget ScriptedEvent when the gas weapon hits an enemy.
+-- ScriptedEvent handler signature: (self, other); other = the Chaos Drone.
 function BecomeDissidentFunction(self, other)
-    local selfId = GetObj.UniqueId(self)
+    local uid = GetObj.UniqueId(self)
+    local now = GetFrame()
 
-    -- -- Guard: skip if already a dissident (weapon fires every 2s, don't reset orders)
-    -- if DissidentOriginalTeam[selfId] ~= nil then
-    --     return
-    -- end
-
-    PrintlnToFileWithTimeStamp("[BecomeDissident] ENTER unit=" .. ObjectDescription(self))
-
-    if ChaosDroneOwnerTeam == nil then
-        PrintlnToFileWithTimeStamp("[BecomeDissident] ABORT: ChaosDroneOwnerTeam is nil")
-        return
+    if DissidentUntilFrame[uid] ~= nil and now < DissidentUntilFrame[uid] then
+        return    -- already dissident: do not interrupt the new orders
     end
+    DissidentUntilFrame[uid] = now + DISSIDENT_WINDOW_FRAMES
 
-    local selfRef = GetObj.StrRefNew(self)
-    PrintlnToFileWithTimeStamp("[BecomeDissident] selfRef=" .. tostring(selfRef) .. " selfId=" .. tostring(selfId))
+    PrintlnToFileWithTimeStamp("[BecomeDissident] dropping order: " .. ObjectDescription(self))
 
-    -- -- Save original team BEFORE switching
-    -- DissidentOriginalTeam[selfId] = GetObj.TeamName(self)
-    -- PrintlnToFileWithTimeStamp("[BecomeDissident] saved originalTeam=" .. tostring(DissidentOriginalTeam[selfId]))
+    -- Drop the order that was issued before the gas: the engine flips hostility
+    -- but never re-evaluates an existing order, so otherwise the unit keeps
+    -- shooting its old target.
+    ExecuteAction("NAMED_STOP", GetObj.StrRefNew(self))
 
-    -- -- Switch team — CD becomes ally, former allies become enemies (R4.3)
-    -- PrintlnToFileWithTimeStamp("[BecomeDissident] UNIT_SET_TEAM -> " .. tostring(ChaosDroneOwnerTeam))
-    -- ExecuteAction("UNIT_SET_TEAM", selfRef, ChaosDroneOwnerTeam)
+    -- NOTE: do NOT set EMOTION_DISSIDENT from Lua here any more.
+    -- The AttributeModifier re-applies it on every gas tick (every ~2 s) with a
+    -- 20 s duration, so the effect lasts 20 s after the LAST hit — the same
+    -- schedule as the red TintObjectsNugget (0 + 18 + 2 s, also refreshed per
+    -- tick). A Lua UNIT_SET_MODELCONDITION_FOR_DURATION is applied only once (the
+    -- debounce above), so its un-refreshed 20 s timer expired first and cut the
+    -- insanity short while the tint was still fading.
 
-    -- Make uncontrollable (R4.2)
-    ObjectForbidPlayerCommands(self, 1)
+    -- ACCEPTED TRADE-OFF: the victim carries NON_AUTOACQUIRABLE so that its own
+    -- former allies stop shooting it. That status is per object and applies to
+    -- every observer, so insane units also stop targeting each other. SAGE has no
+    -- per-observer hostility (relationships are per player-pair and symmetric),
+    -- so "allies can't hit it but other insane units can" is not expressible.
+    -- An attempt to bridge it with explicit UNIT_CONTEXT_SENSITIVE_ATTACK orders
+    -- between insane units did not work and was removed.
 
-    -- Make untargetable by former allies (R4.5)
-    ExecuteAction("UNIT_CHANGE_OBJECT_STATUS", selfRef, ObjectStatusTable["UNATTACKABLE"], 1)
+    -- NOTE: this handler only runs for units that carry a LUAEventList. Vanilla
+    -- units mostly have none, so Data/UnitOverrides/UnitOverrides.xml adds one to
+    -- every combat unit that lacks it (units that already declare their own list,
+    -- like the Hammer Tank, are left untouched - replacing their module would kill
+    -- their OnCreated handler).
+    -- UNIT_AI_TRANSFER(self, false) was tried here: it changed nothing.
 
-    -- Set aggressive stance — auto-acquire former allies AND buildings
-    ExecuteAction("UNIT_SET_STANCE", selfRef, STANCE_TYPE["AGGRESSIVE"])
-
-    -- Clear orders, then hunt
-    ExecuteAction("NAMED_STOP", selfRef)
-    ExecuteAction("NAMED_HUNT", selfRef)
-
-    -- Set EMOTION_DISSIDENT for 20s. When this expires,
-    -- RecoverFromDissident (-EMOTION_DISSIDENT) will fire.
-    ExecuteAction("UNIT_SET_MODELCONDITION_FOR_DURATION", selfRef, "EMOTION_DISSIDENT", 20, 100)
-
-    PrintlnToFileWithTimeStamp("[BecomeDissident] EXIT — hunting")
+    -- Tried and removed earlier:
+    --  * UNIT_SET_STANCE(AGGRESSIVE) made the unit attack buildings, but the
+    --    stance cannot be restored afterwards — unwanted permanent side effect.
+    --  * NAMED_HUNT left no permanent state, but did NOT make the unit attack
+    --    buildings either, so it only risked sending the unit wandering.
+    -- Attacking buildings while insane is a known open gap, tracked in
+    -- docs/ChaosDrone-Requirements.md.
 end
 
--- Called when EMOTION_DISSIDENT expires (-EMOTION_DISSIDENT -DYING).
+-- Registered for the RecoverFromDissident ModelConditionEvent (-EMOTION_DISSIDENT).
+-- In practice it does NOT fire any more: the model condition is now set only by
+-- AttributeModifier_Dissident, and AttributeModifier-set model conditions do not
+-- raise ModelConditionEvents. The engine removes hostility + NON_AUTOACQUIRABLE
+-- on its own when the modifier expires, so nothing is needed here.
+-- Kept registered as a no-op so the wiring stays valid if we ever set the model
+-- condition from Lua again.
 function RecoverFromDissidentFunction(self)
-    local selfRef = GetObj.StrRefNew(self)
-    local selfId = GetObj.UniqueId(self)
-    PrintlnToFileWithTimeStamp("[RecoverFromDissident] ENTER unit=" .. ObjectDescription(self) .. " selfRef=" .. tostring(selfRef))
-
-    ExecuteAction("NAMED_STOP", selfRef)
-
-    -- if DissidentOriginalTeam[selfId] ~= nil then
-    --     PrintlnToFileWithTimeStamp("[RecoverFromDissident] restoring team=" .. tostring(DissidentOriginalTeam[selfId]))
-    --     ExecuteAction("UNIT_SET_TEAM", selfRef, DissidentOriginalTeam[selfId])
-    --     DissidentOriginalTeam[selfId] = nil
-    -- else
-    --     PrintlnToFileWithTimeStamp("[RecoverFromDissident] WARNING: no original team saved for id=" .. tostring(selfId))
-    -- end
-
-    ExecuteAction("UNIT_SET_STANCE", selfRef, STANCE_TYPE["GUARD"])
-    ExecuteAction("UNIT_CHANGE_OBJECT_STATUS", selfRef, ObjectStatusTable["UNATTACKABLE"], 0)
-    ExecuteAction("UNIT_AI_TRANSFER", selfRef, 0)
-    ObjectForbidPlayerCommands(self, 0)
-    PrintlnToFileWithTimeStamp("[RecoverFromDissident] EXIT")
+    PrintlnToFileWithTimeStamp("[RecoverFromDissident] effect ended: " .. ObjectDescription(self))
 end

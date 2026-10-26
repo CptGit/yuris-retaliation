@@ -1,5 +1,106 @@
 <?xml version="1.0" encoding="utf-8"?>
 <AssetDeclaration xmlns="uri:ea.com:eala:asset">
+
+    <!-- ==================================================================
+         Chaos Drone gas — "dissident" (insane) effect  [WORKING]
+         ==================================================================
+         KW's Redeemer "Rage Generator" is the closest shipped precedent for
+         the Chaos Drone, and it is implemented with XML only:
+
+             KW GlobalData/Weapon.xml ~12812-12836
+                 <WeaponTemplate id="NODWarmechRageGenerator"
+                                 RadiusDamageAffects="ENEMIES NEUTRALS">
+                   <Nuggets>
+                     <DamageNugget Damage="0" Radius="500.0" .../>
+                     <AttributeModifierNugget
+                         AttributeModifierName="AttributeModifier_Hallucinate"
+                         Radius="500">
+                       <SpecialObjectFilter Rule="ANY"
+                           Include="INFANTRY VEHICLE" Exclude="AIRCRAFT"/>
+                     </AttributeModifierNugget>
+                   </Nuggets>
+                 </WeaponTemplate>
+
+             KW GlobalData/AttributeModifier.xml:146-151
+                 <AttributeModifier id="AttributeModifier_Hallucinate"
+                     Category="NONE" Duration="6s"
+                     ModelConditionsSet="EMOTION_DISSIDENT"/>
+
+         i.e. the ONLY effect applied to the victim is the model condition
+         EMOTION_DISSIDENT; the hostility flip, the loss of player control and
+         the auto-recovery are all engine-side. That is the real meaning of
+         "EMOTION_DISSIDENT is defected in nature" (see dev-notes.md).
+
+         RA3 still ships every part of that code path:
+             EMOTION_DISSIDENT      Schemas/Includes/ModelState.xsd:425
+             ObjectDefectionHelper  Xml/BaseObjects/BaseObject.xml:31-35
+                                    (present on EVERY RA3 object)
+             TEMPORARILY_DEFECTED   Schemas/Includes/ObjectStatus.xsd:71
+             TemporarilyDefectUpdate Schemas/Modules/TemporarilyDefectUpdate.xsd:8
+
+         RESULT IN RA3 (verified in game 2026-10-24): it WORKS. Units hit by the
+         gas turn on their own teammates and revert by themselves when the
+         Duration expires.
+
+         The ONE thing the engine does NOT do is re-evaluate an attack order that
+         was already issued: a unit that was shooting the CD owner before the gas
+         keeps shooting it. That gap is closed in Lua — BecomeDissidentFunction
+         in Scripts.lua, triggered by the LuaEventNugget in WeaponTemplate.xml.
+         (In YR an insane unit never keeps pounding the Chaos Drone, so that step
+         is required for parity.)
+         ================================================================== -->
+
+    <!-- ACTIVE. The one and only effect needed — verified working in game.
+
+         NON_AUTOACQUIRABLE + HYBRID.
+
+         Goal (YR behaviour): the insane unit attacks everybody, but its own
+         former allies leave it alone, while the player can still order attacks
+         on it.
+
+         Statuses are per OBJECT and apply to every observer, so:
+           - UNATTACKABLE       -> nobody can hit it, including the player (rejected)
+           - no status at all   -> insane units fight each other, but their own
+                                   former allies shoot them dead (observed)
+         NON_AUTOACQUIRABLE is the right half-measure, but it also hides the victim
+         from OTHER insane units (observed: insane units stopped fighting each
+         other).
+
+         So the other half is done in Lua: BecomeDissidentFunction keeps a roster
+         of currently insane units and issues explicit UNIT_CONTEXT_SENSITIVE_ATTACK
+         orders between them. Explicit orders bypass the auto-acquire filter, so
+         insane units still turn on each other while normal units leave them be. -->
+    <AttributeModifier
+        id="AttributeModifier_Dissident"
+        Category="NONE"
+        Duration="20s"
+        ModelConditionsSet="EMOTION_DISSIDENT"
+        ObjectStatusToSet="NON_AUTOACQUIRABLE" />
+
+    <!-- REMOVED: AttributeModifier_NoAttackPulse (NO_ATTACK for 0.5s).
+         Tested 2026-10-24: NO_ATTACK only suppresses firing, it does NOT cancel
+         the attack order, so victims still kept shooting the drone — the only
+         visible effect was a 0.5s stutter on every gas tick.
+         Clearing the order really does need Lua (NAMED_STOP), which in turn
+         needs a LUAEventList on every unit — see UnitOverrides/UnitOverrides.xml.
+    -->
+
+    <!-- Alternative, NOT in use: the same thing plus TEMPORARILY_DEFECTED.
+         Prepared as a fallback while we still believed the model condition did
+         nothing. Unnecessary now that EMOTION_DISSIDENT is confirmed to work;
+         kept in case we ever want the engine's own defection bookkeeping
+         (TemporarilyDefectUpdate) involved. Status names are strings on purpose
+         — the numeric ObjectStatusTable in Scripts.lua has drifted. -->
+    <AttributeModifier
+        id="AttributeModifier_DissidentStatus"
+        Category="NONE"
+        Duration="20s"
+        ModelConditionsSet="EMOTION_DISSIDENT"
+        ObjectStatusToSet="TEMPORARILY_DEFECTED" />
+
+    <!-- Legacy Lua-driven implementation. Kept as a fallback for the Phase 2b
+         route: it only tags the victim as un-auto-acquirable, the actual
+         defection is done in BecomeDissidentFunction(). -->
     <AttributeModifier
         id="AttributeModifier_Hallucinate"
         Category="NONE"

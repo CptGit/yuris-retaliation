@@ -2,7 +2,14 @@
 <AssetDeclaration xmlns="uri:ea.com:eala:asset" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <!-- Attack weapon: AoE gas centered on the drone (DamageDealtAtSelfPosition).
          CD must be ordered to attack an enemy to release gas.
-         All nugget effects radiate from the CD's position, not the target. -->
+         All nugget effects radiate from the CD's position, not the target. (R2)
+
+         The defection itself is done by the engine: the AttributeModifierNugget
+         applies "AttributeModifier_Dissident"
+         (ModelConditionsSet="EMOTION_DISSIDENT") — that alone makes victims turn
+         on their own side for 20s and then recover. The LuaEventNugget is only
+         there so Lua can clear a victim's stale attack order, which the engine
+         never re-evaluates. See AttributeModifier.xml for the full rationale. -->
     <WeaponTemplate
         id="ChaosDroneGasAura"
         AttackRange="150.0"
@@ -21,27 +28,48 @@
             MinSeconds="1.5s"
             MaxSeconds="1.5s" />
         <Nuggets>
-            <!-- AoE 0-damage hit centered on drone -->
-            <DamageNugget
-                Damage="0.0"
-                Radius="150.0"
-                DamageType="UNRESISTABLE"
-                DeathType="NORMAL" />
+            <!-- NO DamageNugget on purpose.
 
-            <!-- Apply EMOTION_DISSIDENT via attribute modifier to enemies in range -->
+                 It used to carry a 0-damage DamageNugget just to give the AoE a
+                 "hit". That hit is what made victims RETALIATE against the drone:
+                 SAGE units auto-retaliate against whatever damaged them, and that
+                 retaliation ignores NON_AUTOACQUIRABLE. Result: a gassed unit got
+                 force-stopped by Lua and immediately re-picked the drone as its
+                 retaliation target — observed with anti-air units, which kept
+                 shooting the drone even though they were clearly affected.
+
+                 The other nuggets do not need a damage hit; each carries its own
+                 SpecialObjectFilter + Radius. -->
+
+            <!-- Apply the dissident state to enemies in range. This is the whole
+                 effect: EMOTION_DISSIDENT makes the victim hostile to its own
+                 side for Duration (20s) and the engine restores it afterwards.
+                 "AttributeModifier_DissidentStatus" (same + TEMPORARILY_DEFECTED)
+                 is an unused alternative, see AttributeModifier.xml. -->
             <AttributeModifierNugget
-                AttributeModifierName="AttributeModifier_Hallucinate"
+                AttributeModifierName="AttributeModifier_Dissident"
                 Radius="150.0">
                 <SpecialObjectFilter
                     Rule="ANY"
                     Relationship="ENEMIES NEUTRAL"
                     Include="INFANTRY VEHICLE"
+                    Exclude="AIRCRAFT STRUCTURE"
                     StatusBitFlagsExclude="AIRBORNE_TARGET" />
             </AttributeModifierNugget>
 
-            <!-- Tint affected enemies red BEFORE team switch.
-                 Must come before LuaEventNugget which changes the unit's team.
-                 Total = 0+18+2 = 20s matching dissident duration -->
+            <!-- Red tint on affected units (R6).
+                 Kept for now because it doubles as the visual proof that the
+                 nugget actually reached the victim: if units turn red but show
+                 no berserk behaviour, the weapon/filter is fine and the problem
+                 is the engine's dissident hook.
+                 Colour components are floats in 0..1
+                 (Schemas/Includes/Base.xsd:4-17 — RGBColor), so R must be 1,
+                 not 3.
+                 Total = Pre + Sustained + Post = 0 + 18 + 2 = 20s (R6).
+                 NOTE: Phase 2 replaces this with a Shader= on the
+                 AttributeModifier, because TintObjectsNugget filters on
+                 Relationship=ENEMIES and would break the moment a team switch
+                 happens (phase 2b route). -->
             <TintObjectsNugget
                       PreColorTime="0s"
                       SustainedColorTime="18.0s"
@@ -53,19 +81,32 @@
                     Rule="ANY"
                     Relationship="ENEMIES NEUTRAL"
                     Include="INFANTRY VEHICLE"
+                    Exclude="AIRCRAFT STRUCTURE"
                     StatusBitFlagsExclude="AIRBORNE_TARGET" />
-                <Color R="3" G="0" B="0" />
+                <Color R="1" G="0" B="0" />
             </TintObjectsNugget>
 
-            <!-- Dispatch BecomeDissident ScriptedEvent to enemies in range.
-                 This is the trigger for dissident Lua behavior.
-                 MUST be last nugget — it switches the unit's team. -->
+            <!-- Dispatch the BecomeDissident ScriptedEvent to affected units.
+                 This does NOT do the defection (the AttributeModifier above does
+                 that, engine-side). It only lets Lua clear the victim's stale
+                 attack order, which the engine never re-evaluates — that is why
+                 a unit already shooting the CD owner kept shooting it.
+                 Reaches every object via the BaseObject override
+                 (ModuleTag_DissidentEvents -> DissidentFunctions).
+                 Must stay AFTER the AttributeModifierNugget. -->
             <LuaEventNugget
                 EventName="BecomeDissident"
                 Radius="150.0"
                 SendToEnemies="true"
                 SendToNeutral="true"
-                SendToAllies="false" />
+                SendToAllies="false">
+                <SpecialObjectFilter
+                    Rule="ANY"
+                    Relationship="ENEMIES NEUTRAL"
+                    Include="INFANTRY VEHICLE"
+                    Exclude="AIRCRAFT STRUCTURE"
+                    StatusBitFlagsExclude="AIRBORNE_TARGET" />
+            </LuaEventNugget>
         </Nuggets>
     </WeaponTemplate>
 </AssetDeclaration>
